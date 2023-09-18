@@ -16,7 +16,7 @@
 #' @param n_loo integer. Number of observations to be split into a test set.
 #' @param q_cens numeric \[0, 1\]. Optional artificial left-censoring level.
 #'
-#' @return List with class `mixexpert_sim`.
+#' @returns List with class `mixexpert_sim`.
 #'
 #' @export
 simulate_mixexpert <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
@@ -51,6 +51,7 @@ simulate_mixexpert <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
   y_data <-
     tibble::as_tibble(y, .name_repair = \(.y) sprintf("y%02i", seq_along(.y)))
 
+
   all_data <- dplyr::bind_cols(y_data, x_data)
   is_test <- seq_len(n_s) %in% sample.int(n_s, size = n_loo)
 
@@ -64,7 +65,14 @@ simulate_mixexpert <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
     )
 
   if (!is.null(q_cens)) {
-    stop("Artificial censoring not implemented yet")
+    requireNamespace("survival", quietly = TRUE)
+    out$params$y_uncens <- out$data[colnames(y_data)]
+
+    out$data <-
+      dplyr::mutate(out$data, dplyr::across(
+        .cols = dplyr::all_of(colnames(y_data)),
+        .fns = function(.y) artificial_Surv(.y, q_cens)
+      ))
   }
 
   return(structure(out, class = "mixexpert_sim"))
@@ -80,9 +88,9 @@ simulate_mixexpert <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
 example_simulate_mixexpert <- function(..., multiple_y = FALSE) {
   regr <-
     if (multiple_y) {
-      array(sample.int(24), dim = c(4, 2, 3))
+      array(0.25 * sample.int(24), dim = c(4, 2, 3))
     } else {
-      array(sample.int(12), dim = c(4, 1, 3))
+      array(0.25 * sample.int(12), dim = c(4, 1, 3))
     }
 
   args <-
@@ -125,6 +133,30 @@ simulate_multilogit <- function(x_wt, wt) {
 #'
 #' @keywords internal
 sweep_wt <- function(wt, ref = 1) sweep(wt, 1, wt[, ref], `-`)
+
+
+#' Artificial Censoring
+#'
+#' Convert numeric vector to a `survival::Surv` object by censoring at
+#'   chosen quantiles.
+#'
+#' @param x vector. Uncensored numerical data.
+#' @inheritParams simulate_mixexpert
+#'
+#' @returns Surv object.
+#' @keywords internal
+artificial_Surv <- function(x, q_cens) {
+  detlims <- stats::quantile(x, q_cens)
+
+  cut_points <- cut(x, unique(c(-Inf, detlims, Inf)))
+
+  x_is_nd <- as.numeric(cut_points) < max(as.numeric(cut_points))
+  x_value <- ifelse(x_is_nd, detlims[cut_points], x)
+
+  out <- cbind(time = x_value, status = !x_is_nd)
+
+  return(structure(out, type = "left", class = "Surv"))
+}
 
 
 #' Simulate Design Matrix

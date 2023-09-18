@@ -1,47 +1,43 @@
-var lp_regr[n_s, k], lp_wt[n_s, k];
+var regr[p_regr, n_y, k], prec[n_y, k], unnormalised_probs[n_s, k];
 data {
   # Ones trick
-  ones = rep(1, n_s)
-  C = 1000
+  for (i in 1:n_s) { for (yi in 1:n_y) { ones[i, yi] = 1 }}
+  C = 10000
 }
 model {
   # Transformed parameters
-  lp_regr = x_regr %*% regr
-  lp_wt = x_wt %*% wt
-
   for (i in 1:n_s) {
     for (ki in 1:k) {
-      exp_lp_wt[i, ki] = exp(lp_wt[i, ki])
+      unnormalised_probs[i, ki] = exp(x_wt[i, ] %*% wt[, ki])
     }
   }
 
   # Likelihood
   for (i in 1:n_s) {
-    ones[i] ~ dbern(L[i] / C)
+    z[i] ~ dcat(unnormalised_probs[i, 1:k])
 
-    L[i] = ifelse(is_nd[i], y_cdf[i], y_pdf[i])
-    y_cdf[i] = pnorm(y[i], mean[i], prec[z[i]])
-    y_pdf[i] = dnorm(y[i], mean[i], prec[z[i]])
+    for (yi in 1:n_y) {
+      ones[i, yi] ~ dbern(L[i, yi] / C)
+      L[i, yi] = ifelse(is_nd[i, yi], y_cdf[i, yi], y_pdf[i, yi])
 
-    mean[i] = lp_regr[i, z[i]]
+      y_cdf[i, yi] = pnorm(y[i, yi], mean[i, yi], prec[yi, z[i]])
+      y_pdf[i, yi] = dnorm(y[i, yi], mean[i, yi], prec[yi, z[i]])
 
-    z[i] ~ dcat(probs[i, 1:k])
-    probs[i, 1:k] = exp_lp_wt[i, 1:k]
+      mean[i, yi] = x_regr[i, ] %*% regr[, yi, z[i]]
+    }
   }
 
   # Prior
-  for (ki in 1:k) { prec[ki] ~ dgamma(prec_shape, prec_rate) }
+  for (ki in 1:k) { for (yi in 1:n_y) {
+    prec[yi, ki] ~ dgamma(prec_shape, prec_rate)
+  }}
 
-  for (j in 1:p_regr) {
-    for (ki in 1:k) {
-      regr[j, ki] ~ dnorm(0, regr_prec)
-    }
-  }
+  for (j in 1:p_regr) { for (yi in 1:n_y) { for (ki in 1:k) {
+    regr[j, yi, ki] ~ dnorm(0, regr_prec)
+  }}}
 
   for (j in 1:p_wt) {
-    for (ki in 2:k) {
-      wt[j, ki] ~ dnorm(0, wt_prec)
-    }
+    for (ki in 2:k) { wt[j, ki] ~ dnorm(0, wt_prec) }
     wt[j, 1] = 0
   }
 }

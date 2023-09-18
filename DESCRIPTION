@@ -27,6 +27,7 @@ Imports:
     rlang,
     tibble,
 Suggests:
+    survival,
     testthat (>= 3.0.0)
 Remotes:
     github::nclJoshCowley/mcmcrutils
