@@ -20,10 +20,10 @@ NULL
 #' - `prec` is element-wise IID Gamma with **prec_shape** and **prec_rate**.
 #'
 #' @export
-mixexpert_prior_vague <- function(k, ...) {
+mixexpert_prior <- function(k, ...) {
   defaults <-
     list(
-      k = k, regr_prec = 0.01, wt_prec = 0.1, prec_shape = 2, prec_rate = 0.01
+      k = k, regr_prec = 0.1, wt_prec = 1, prec_shape = 2, prec_rate = 1
     )
 
   out <- utils::modifyList(defaults, purrr::list_flatten(rlang::list2(...)))

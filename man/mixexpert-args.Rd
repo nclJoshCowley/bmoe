@@ -2,11 +2,11 @@
 % Please edit documentation in R/mixexpert-args.R
 \name{mixexpert-args}
 \alias{mixexpert-args}
-\alias{mixexpert_prior_vague}
+\alias{mixexpert_prior}
 \alias{mixexpert_jags_n}
 \title{MoE (\code{mixexpert}) Arguments}
 \usage{
-mixexpert_prior_vague(k, ...)
+mixexpert_prior(k, ...)
 
 mixexpert_jags_n(...)
 }
