@@ -1,0 +1,33 @@
+var regr[p_regr, n_y, k], prec[n_y, k], unnormalised_probs[n_s, k];
+model {
+  # Transformed parameters
+  for (i in 1:n_s) {
+    for (ki in 1:k) {
+      unnormalised_probs[i, ki] = exp(x_wt[i, ] %*% wt[, ki])
+    }
+  }
+
+  # Likelihood
+  for (i in 1:n_s) {
+    z[i] ~ dcat(unnormalised_probs[i, 1:k])
+
+    for (yi in 1:n_y) {
+      y[i, yi] ~ dnorm(mean[i, yi], prec[yi, z[i]])
+      mean[i, yi] = x_regr[i, ] %*% regr[, yi, z[i]]
+    }
+  }
+
+  # Prior
+  for (ki in 1:k) { for (yi in 1:n_y) {
+    prec[yi, ki] ~ dgamma(prec_shape, prec_rate)
+  }}
+
+  for (j in 1:p_regr) { for (yi in 1:n_y) { for (ki in 1:k) {
+    regr[j, yi, ki] ~ dnorm(0, regr_prec)
+  }}}
+
+  for (j in 1:p_wt) {
+    for (ki in 2:k) { wt[j, ki] ~ dnorm(0, wt_prec) }
+    wt[j, 1] = 0
+  }
+}
