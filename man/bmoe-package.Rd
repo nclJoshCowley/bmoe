@@ -4,6 +4,9 @@
 \name{bmoe-package}
 \alias{bmoe-package}
 \title{Bayesian Mixture of Experts Package}
+\arguments{
+\item{object}{Object that inherits from \code{\link{mixexpert}}.}
+}
 \description{
 Bayesian Mixture of Experts (MoE) applied to possibly left-censored
 linear regression.

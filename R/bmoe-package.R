@@ -4,6 +4,8 @@
 #'   Bayesian Mixture of Experts (MoE) applied to possibly left-censored
 #'   linear regression.
 #'
+#' @param object Object that inherits from [`mixexpert`].
+#'
 #' @docType package
 #' @name bmoe-package
 #'

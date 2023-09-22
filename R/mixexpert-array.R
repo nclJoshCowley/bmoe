@@ -6,7 +6,9 @@
 #' @note Considered and decided against packages `posterior`, `mcmcr`, `rjags`.
 #'   There seems to be no standardised 'best' method to store MCMC output.
 #'
-#' @param x object. To be coerced to different format.
+#' @param x object. To be coerced to different format or name used in generc.
+#' @param fun function. Function to summarise when printing.
+#' @param ... Extra arguments passed on where appropriate.
 #'
 #' @export
 mixexpert_array <- function(x) {

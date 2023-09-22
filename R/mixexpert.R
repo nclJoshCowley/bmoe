@@ -115,3 +115,26 @@ format.mixexpert <- function(x, ...) {
     sprintf("- `%s`", wt_formatted)
   ))
 }
+
+
+#' Get Human Readable Names
+#'
+#' Helper to access names from data (`y`, `x`, `k`) to be displayed to users.
+#'
+#' @inheritParams bmoe-package
+#'
+#' @export
+get_names_from_mixexpert <- function(object) {
+  list(
+    y =
+      vapply(object$formula$regr, function(.x) deparse(.x[[2]]), character(1)),
+
+    x =
+      stats::model.frame(object$formula$regr[[1]], data = object$data) |>
+      stats::model.matrix(data = object$data) |>
+      colnames(),
+
+    k =
+      sprintf("k = %i", seq_len(object$prior$k))
+  )
+}

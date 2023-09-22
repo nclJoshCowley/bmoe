@@ -16,7 +16,11 @@ mixexpert_array(x)
 \method{tidy}{mixexpert_array}(x, ...)
 }
 \arguments{
-\item{x}{object. To be coerced to different format.}
+\item{x}{object. To be coerced to different format or name used in generc.}
+
+\item{fun}{function. Function to summarise when printing.}
+
+\item{...}{Extra arguments passed on where appropriate.}
 }
 \description{
 MCMC array structure, \code{c(n_iters, n_chains, dim(.)[1], dim(.)[2], ...)},
