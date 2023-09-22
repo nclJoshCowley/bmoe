@@ -38,8 +38,8 @@ mixexpert.mixexpert_sim <- function(object, ...,
   out <-
     mixexpert.formula(
       formula,
-      object$data,
-      ...,
+      data = object$data,
+      # ...,
       prior = prior,
       jags_n = jags_n,
       inits = inits

@@ -25,8 +25,8 @@ mixexpert_yx <- function(y_list, x_regr, x_wt, prior, jags_n, inits) {
     y_data <- transpose_Surv_list(y_list)
 
   } else {
-    jags_filename <- "mixexpert-cens.jags"
-    y_data <- do.call(cbind, y_list)
+    jags_filename <- "mixexpert.jags"
+    y_data <- list(y = do.call(cbind, y_list))
   }
 
   jags_file <-
@@ -44,7 +44,7 @@ mixexpert_yx <- function(y_list, x_regr, x_wt, prior, jags_n, inits) {
     )
 
   out <-
-    mcmcrutils::complete_jags_fit(
+    complete_jags_fit(
       file = jags_file,
       data = c(jags_data, prior),
       inits = inits,

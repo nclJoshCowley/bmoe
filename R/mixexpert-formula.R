@@ -69,7 +69,7 @@ split_call <- function(x, sep = "|") {
 #' @param x list. Expressions to be added together.
 #' @keywords internal
 create_summand_from_symbols <- function(x) {
-  stopifnot(length(x) > 1)
+  if (length(x) == 1) return(x[[1]])
 
   out <- x[[1]]
   for (i in seq(from = 2, to = length(x))) {

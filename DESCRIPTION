@@ -20,14 +20,13 @@ Depends:
     R (>= 4.1.0)
 Imports:
     dplyr,
+    knitrProgressBar,
+    generics,
     MASS,
-    mcmcr,
-    mcmcrutils,
     purrr,
     rlang,
+    rjags,
     tibble,
 Suggests:
     survival,
     testthat (>= 3.0.0)
-Remotes:
-    github::nclJoshCowley/mcmcrutils
