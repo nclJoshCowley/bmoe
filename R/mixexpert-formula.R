@@ -40,6 +40,9 @@ parse_mixexpert_formula <- function(object) {
   formula_regr <-
     lapply(split_call(lhs, "+"), rlang::new_formula, rhs = rhs_regr)
 
+  names(formula_regr) <-
+    vapply(formula_regr, function(.f) deparse(.f[[2]]), character(1))
+
   list(regr = formula_regr, wt = formula_wt)
 }
 

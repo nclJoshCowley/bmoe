@@ -127,7 +127,7 @@ format.mixexpert <- function(x, ...) {
 get_names_from_mixexpert <- function(object) {
   list(
     y =
-      vapply(object$formula$regr, function(.x) deparse(.x[[2]]), character(1)),
+      names(object$formula$regr),
 
     x =
       stats::model.frame(object$formula$regr[[1]], data = object$data) |>
