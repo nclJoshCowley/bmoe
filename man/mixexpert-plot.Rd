@@ -5,12 +5,20 @@
 \alias{autoplot.mixexpert}
 \title{MoE Patchwork Objects}
 \usage{
-\method{autoplot}{mixexpert}(object, varname, ...)
+\method{autoplot}{mixexpert}(object, varname, type = "none", ...)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{mixexpert}}.}
 
 \item{varname}{character. Single variable name such as \code{regr} or \code{prec}.}
+
+\item{type}{choice. Name of the supported plot type including
+\itemize{
+\item \code{"none"}, plots are to be empty until the user adds layers.
+\item \code{"density"}, useful distribution visualisation.
+\item \code{"trace"}, useful for verifying chain convergence.
+\item \code{"acf"}, autocorrelation of the MCMC samples at discrete lags.
+}}
 
 \item{...}{These dots are for future extensions and must be empty.}
 }

@@ -13,7 +13,7 @@ mixexpert_array(x)
 
 \method{print}{mixexpert_array}(x, fun = mean, ...)
 
-\method{tidy}{mixexpert_array}(x, ...)
+\method{tidy}{mixexpert_array}(x, ..., .dimnames = NULL)
 }
 \arguments{
 \item{x}{object. To be coerced to different format or name used in generc.}
@@ -21,6 +21,10 @@ mixexpert_array(x)
 \item{fun}{function. Function to summarise when printing.}
 
 \item{...}{Extra arguments passed on where appropriate.}
+
+\item{.dimnames}{character.
+Default behaviour only adds \verb{.term <chr>}; supplying dimension names
+adds a column of indices for each dimension.}
 }
 \description{
 MCMC array structure, \code{c(n_iters, n_chains, dim(.)[1], dim(.)[2], ...)},

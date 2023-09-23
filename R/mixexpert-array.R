@@ -59,25 +59,54 @@ print.mixexpert_array <- function(x, fun = mean, ...) {
 
 
 #' @rdname mixexpert_array
+#'
+#' @param .dimnames character.
+#'   Default behaviour only adds `.term <chr>`; supplying dimension names
+#'   adds a column of indices for each dimension.
+#'
 #' @export
-tidy.mixexpert_array <- function(x, ...) {
+tidy.mixexpert_array <- function(x, ..., .dimnames = NULL) {
   varname <- attr(x, "varname") %||% "par"
 
   names(dim(x)) <- gsub("^iteration$", ".iter", names(dim(x)))
   names(dim(x)) <- gsub("^chain$", ".chain", names(dim(x)))
 
-  out <- tibble::as_tibble(do.call(expand.grid, lapply(dim(x), seq_len)))
+  if (!is.null(.dimnames)) {
+    stopifnot("Bad dimension names" = length(.dimnames) == length(dim(x)) - 2)
+    names(dim(x)) <- c(".iter", ".chain", .dimnames)
+  }
 
-  rowwise_toString <- function(.x) do.call(paste, c(sep = ",", .x))
+  enframed_array <-
+    tibble::as_tibble(do.call(expand.grid, lapply(dim(x), seq_len))) |>
+    dplyr::mutate(.value = c(.env$x))
 
-  out |>
+  out <-
     dplyr::mutate(
-      tdims = rowwise_toString(dplyr::pick(-c(".iter", ".chain"))),
-      .keep = "unused"
-    ) |>
-    dplyr::mutate(
-      .term = sprintf("%s[%s]", varname, .data$tdims),
-      .value = c(x),
-      .keep = "unused"
+      enframed_array,
+      .term = sprintf(
+        "%s[%s]",
+        varname,
+        unite_and_extract(dplyr::pick(-c(".iter", ".chain", ".value")))
+      ),
+      .after = ".chain"
     )
+
+  if (!is.null(.dimnames)) return(out)
+
+  dplyr::select(out, dplyr::all_of(c(".iter", ".chain", ".term", ".value")))
+}
+
+
+#' Unite Columns into String
+#'
+#' @param data data frame. Contains columns to be joined.
+#' @param sep character. Passed to `paste`.
+#'
+#' @returns character vector, `paste(df[, 1], ..., df[, N], sep = sep)`.
+#'
+#' @seealso `tidyr::unite()`.
+#'
+#' @keywords internal
+unite_and_extract <- function(data, sep = ",") {
+  do.call(paste, c(sep = sep, data))
 }

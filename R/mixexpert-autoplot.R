@@ -35,9 +35,7 @@ autoplot_regr <- function(object) {
   nms <- get_names_from_mixexpert(object)
   n_x <- length(nms$x)
 
-  regr_draws <-
-    tidy(object$output$regr) |>
-    dplyr::mutate(extract_term_indices(.data$.term, c("x", "y", "k")))
+  regr_draws <- tidy(object$output$regr, .dimnames = c("x", "y", "k"))
 
   regr_draws_per_y <-
     split(regr_draws, factor(regr_draws$y, labels = nms$y))
@@ -64,9 +62,7 @@ autoplot_prec <- function(object) {
   nms <- get_names_from_mixexpert(object)
   n_y <- length(nms$y)
 
-  prec_draws <-
-    tidy(object$output$prec) |>
-    dplyr::mutate(extract_term_indices(.data$.term, c("y", "k")))
+  prec_draws <- tidy(object$output$prec, .dimnames = c("y", "k"))
 
   plotlist <-
     prec_draws |>
@@ -86,9 +82,7 @@ autoplot_wt <- function(object) {
   nms <- get_names_from_mixexpert(object)
   n_x <- length(nms$x)
 
-  wt_draws <-
-    tidy(object$output$wt) |>
-    dplyr::mutate(extract_term_indices(.data$.term, c("x", "k")))
+  wt_draws <- tidy(object$output$wt, .dimnames = c("x", "k"))
 
   plotlist <-
     wt_draws |>
@@ -99,31 +93,4 @@ autoplot_wt <- function(object) {
     })
 
   patchwork::wrap_plots(plotlist, nrow = n_x, guides = "collect")
-}
-
-
-#' Extract Term Indices
-#'
-#' Convert term, say `regr[a, b, c]`, to df with column for each dimension.
-#'
-#' @param x character vector. Matches `foo[...]` where only `...` are used.
-#' @param dnames character vector. Output column names.
-#'
-#' @keywords internal
-extract_term_indices <- function(x, dnames = NULL) {
-  # Recall
-  # * (?<=_) / (?=_) means look behind / ahead for '_' but don't include it
-  cur_pattern <- "(?<=\\[)[0-9,]+(?=\\]$)"
-  term_info_str <- regmatches(x, regexpr(cur_pattern, x, perl = TRUE))
-
-  out <-
-    term_info_str |>
-    strsplit(",", fixed = TRUE) |>
-    purrr::list_transpose() |>
-    lapply(as.integer) |>
-    tibble::as_tibble(.name_repair = "minimal")
-
-  colnames(out) <- dnames %||% sprintf(".dim%i", seq_len(ncol(out)))
-
-  return(out)
 }

@@ -17,7 +17,7 @@ generics::tidy
 #'
 #' @name utils-imports
 #'
-#' @importFrom rlang .data
+#' @importFrom rlang .data .env
 #' @importFrom rlang %||%
 #'
 #' @keywords internal
@@ -26,7 +26,3 @@ generics::tidy
 #'   - [`rlang::dot-data()`], data pronoun.
 #'   - [`rlang::op-null-default()`], default value for NULL operator.
 NULL
-
-
-
-

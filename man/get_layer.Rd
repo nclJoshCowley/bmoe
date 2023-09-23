@@ -8,7 +8,7 @@
 \alias{layer_acf}
 \title{Get \code{ggplot2} Layer(s) for Plotting Functionality}
 \usage{
-get_layer(type)
+get_layer(type = "none")
 
 get_truth_layer(type)
 
