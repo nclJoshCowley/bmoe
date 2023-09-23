@@ -5,12 +5,13 @@
 \alias{autoplot.mixexpert}
 \title{MoE Patchwork Objects}
 \usage{
-\method{autoplot}{mixexpert}(object, varname, type = "none", ...)
+\method{autoplot}{mixexpert}(object, varname, type = "none", data, ...)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{mixexpert}}.}
 
-\item{varname}{character. Single variable name such as \code{regr} or \code{prec}.}
+\item{varname}{character. Single variable name including \code{regr}, \code{wt},
+\code{prec} and \code{log_lik}.}
 
 \item{type}{choice. Name of the supported plot type including
 \itemize{
@@ -20,9 +21,11 @@
 \item \code{"acf"}, autocorrelation of the MCMC samples at discrete lags.
 }}
 
+\item{data}{Passed to \link{extract_log_lik}, ignored otherwise.}
+
 \item{...}{These dots are for future extensions and must be empty.}
 }
 \description{
 Creates a \code{\link[patchwork:patchwork-package]{patchwork}} of \code{ggplot2} objects
-with partitioned data, requires the user to add \link[=get_layer]{layers}.
+with partitioned data, requires the user to add \link[=get_mcmc_layer]{layers}.
 }

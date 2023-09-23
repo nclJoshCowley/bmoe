@@ -30,5 +30,7 @@ Imports:
     rjags,
     tibble,
 Suggests:
+    knitr,
     survival,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    quarto,

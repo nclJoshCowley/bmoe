@@ -6,13 +6,13 @@
 #' * `"trace"`, useful for verifying chain convergence.
 #' * `"acf"`, autocorrelation of the MCMC samples at discrete lags.
 #'
-#' @name get_layer
+#' @name get_mcmc_layer
 NULL
 
 
-#' @rdname get_layer
-#' @keywords internal
-get_layer <- function(type = "none") {
+#' @rdname get_mcmc_layer
+#' @export
+get_mcmc_layer <- function(type = "none") {
   switch(
     match.arg(type, c("none", "density", "trace", "acf")),
     none = list(),
@@ -23,7 +23,7 @@ get_layer <- function(type = "none") {
 }
 
 
-#' @rdname get_layer
+#' @rdname get_mcmc_layer
 #' @keywords internal
 get_truth_layer <- function(type) {
   type <- match.arg(type, c("density", "trace", "acf"))
@@ -48,7 +48,7 @@ get_truth_layer <- function(type) {
 }
 
 
-#' @rdname get_layer
+#' @rdname get_mcmc_layer
 #' @keywords internal
 layer_density <- function() {
   list(
@@ -63,7 +63,7 @@ layer_density <- function() {
 }
 
 
-#' @rdname get_layer
+#' @rdname get_mcmc_layer
 #' @keywords internal
 layer_trace <- function() {
   list(
@@ -82,7 +82,7 @@ layer_trace <- function() {
 }
 
 
-#' @rdname get_layer
+#' @rdname get_mcmc_layer
 #' @keywords internal
 layer_acf <- function() {
   list(
@@ -93,7 +93,8 @@ layer_acf <- function() {
       data = prepare_acf_data,
       stat = "identity",
       position = "dodge",
-      width = 0.2
+      width = 0.2,
+      na.rm = TRUE
     ),
 
     ggplot2::labs(y = "ACF", x = NULL, fill = "Chain")

@@ -8,6 +8,7 @@
 #'
 #' @seealso The `loo` package for using these quantities in model comparison.
 #'
+#' @name mixexpert-log-lik
 #' @export
 extract_pointwise_log_lik <- function(object, data) {
   mfs <- lapply(object$formula$regr, stats::model.frame, data = data)
@@ -54,6 +55,21 @@ extract_pointwise_log_lik <- function(object, data) {
   }
 
   return(out)
+}
+
+#' @rdname mixexpert-log-lik
+#' @export
+extract_log_lik <- function(object, data) {
+  lapply(
+    extract_pointwise_log_lik(object, data),
+    function(.x) {
+      structure(
+        apply(.x, 1:2, sum),
+        dim = c(dim(.x)[c("iteration", "chain")], 1),
+        class = "mixexpert_array"
+      )
+    }
+  )
 }
 
 

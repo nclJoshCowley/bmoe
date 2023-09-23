@@ -1,11 +1,13 @@
 #' MoE Patchwork Objects
 #'
 #' Creates a [`patchwork`][patchwork::patchwork-package] of `ggplot2` objects
-#'   with partitioned data, requires the user to add [layers][get_layer].
+#'   with partitioned data, requires the user to add [layers][get_mcmc_layer].
 #'
 #' @inheritParams bmoe-package
-#' @param varname character. Single variable name such as `regr` or `prec`.
-#' @inheritParams get_layer
+#' @param varname character. Single variable name including `regr`, `wt`,
+#'   `prec` and `log_lik`.
+#' @inheritParams get_mcmc_layer
+#' @param data Passed to [extract_log_lik], ignored otherwise.
 #' @inheritParams rlang::args_dots_empty
 #'
 #' @name mixexpert-plot
@@ -14,17 +16,29 @@ NULL
 
 #' @rdname mixexpert-plot
 #' @export
-autoplot.mixexpert <- function(object, varname, type = "none", ...) {
-  cur_layer <- get_layer(type)
+autoplot.mixexpert <- function(object, varname, type = "none", data, ...) {
+  if (length(type) > 1) {
+    names(type) <- gsub("^Acf$", "ACF", tools::toTitleCase(type))
+
+    out <- lapply(type, function(.type) {
+      autoplot(object, varname, .type, data = rlang::maybe_missing(data))
+    })
+
+    is_split_by_y_nms <- varname %in% c("regr", "log_lik")
+    return(if (is_split_by_y_nms) purrr::list_transpose(out) else out)
+  }
+
+  cur_layer <- get_mcmc_layer(type)
 
   rlang::check_dots_empty()
-  varname <- match.arg(varname, names(object$output))
+  varname <- match.arg(varname, c(names(object$output), "log_lik"))
 
   switch(
     varname,
     regr = lapply(autoplot_regr(object), `&`, cur_layer),
+    wt = autoplot_wt(object) & cur_layer,
     prec = autoplot_prec(object) & cur_layer,
-    wt = autoplot_wt(object) & cur_layer
+    log_lik = lapply(autoplot_log_lik(object, data), `&`, cur_layer)
   )
 }
 
@@ -44,35 +58,18 @@ autoplot_regr <- function(object) {
     lapply(regr_draws_per_y, function(.draws) {
       .draws |>
         dplyr::group_by(.data$.term, .data$x, .data$k) |>
-        dplyr::group_map(function(.x, .key) {
-          subtitle <- sprintf("%s, %s", nms$x[.key$x], nms$k[.key$k])
-          ggplot2::ggplot(.x) + ggplot2::labs(subtitle = subtitle)
-        })
+        dplyr::group_map(
+          function(.x, .key) {
+            subtitle <- sprintf("%s, %s", nms$x[.key$x], nms$k[.key$k])
+            ggplot2::ggplot(.x) + ggplot2::labs(subtitle = subtitle)
+          },
+          .keep = TRUE
+        )
     })
 
   lapply(plotlist_per_y, function(.x) {
     patchwork::wrap_plots(.x, nrow = n_x, guides = "collect")
   })
-}
-
-
-#' @inheritParams mixexpert-plot
-#' @keywords internal
-autoplot_prec <- function(object) {
-  nms <- get_names_from_mixexpert(object)
-  n_y <- length(nms$y)
-
-  prec_draws <- tidy(object$output$prec, .dimnames = c("y", "k"))
-
-  plotlist <-
-    prec_draws |>
-    dplyr::group_by(.data$.term, .data$y, .data$k) |>
-    dplyr::group_map(function(.x, .key) {
-      subtitle <- sprintf("%s, %s", nms$y[.key$y], nms$k[.key$k])
-      ggplot2::ggplot(.x) + ggplot2::labs(subtitle = subtitle)
-    })
-
-  patchwork::wrap_plots(plotlist, nrow = n_y, guides = "collect")
 }
 
 
@@ -87,10 +84,48 @@ autoplot_wt <- function(object) {
   plotlist <-
     wt_draws |>
     dplyr::group_by(.data$.term, .data$x, .data$k) |>
-    dplyr::group_map(function(.x, .key) {
-      subtitle <- sprintf("%s, %s", nms$x[.key$x], nms$k[.key$k])
-      ggplot2::ggplot(.x) + ggplot2::labs(subtitle = subtitle)
-    })
+    dplyr::group_map(
+      function(.x, .key) {
+        subtitle <- sprintf("%s, %s", nms$x[.key$x], nms$k[.key$k])
+        ggplot2::ggplot(.x) + ggplot2::labs(subtitle = subtitle)
+      },
+      .keep = TRUE
+    )
 
   patchwork::wrap_plots(plotlist, nrow = n_x, guides = "collect")
+}
+
+
+#' @inheritParams mixexpert-plot
+#' @keywords internal
+autoplot_prec <- function(object) {
+  nms <- get_names_from_mixexpert(object)
+  n_y <- length(nms$y)
+
+  prec_draws <- tidy(object$output$prec, .dimnames = c("y", "k"))
+
+  plotlist <-
+    prec_draws |>
+    dplyr::group_by(.data$.term, .data$y, .data$k) |>
+    dplyr::group_map(
+      function(.x, .key) {
+        subtitle <- sprintf("%s, %s", nms$y[.key$y], nms$k[.key$k])
+        ggplot2::ggplot(.x) + ggplot2::labs(subtitle = subtitle)
+      },
+      .keep = TRUE
+    )
+
+  patchwork::wrap_plots(plotlist, nrow = n_y, guides = "collect")
+}
+
+
+#' @inheritParams mixexpert-plot
+#' @keywords internal
+autoplot_log_lik <- function(object, data) {
+  log_liks <- extract_log_lik(object, data)
+
+  purrr::imap(log_liks, function(.x, .nm) {
+    ggplot2::ggplot(tidy(.x)) +
+      ggplot2::labs(subtitle = sprintf("Log likelihood, %s", .nm))
+  })
 }

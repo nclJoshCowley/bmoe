@@ -1,0 +1,104 @@
+---
+title: "Bayesian Mixture of Experts"
+date: today
+format: html
+page-layout: full
+toc: true
+self-contained: true
+params:
+  object: !expr NULL
+---
+
+```{r setup}
+#| include: false
+library(bmoe)
+library(ggplot2)
+library(patchwork)
+
+object <- 
+  # if (params$object$tag == "!expr") {
+  #   eval(parse(text = params$object$value))
+  # } else {
+  #   params$object
+  # }
+  xfun::cache_rds(file = "a", dir = "cache/", {
+    mixexpert(
+      example_simulate_mixexpert(n_s = 30, n_loo = 10, multiple_y = TRUE, q_cens = 0.1),
+      prior = mixexpert_prior(k = 3),
+      jags_n = list(n.update = 0, n.iter = 2000)
+    )
+  })
+
+.set_bmoe_render_options(object, fig.asp = 0.4)
+```
+
+
+```{r input-bmoe-sim}
+#| output: asis
+#| include: !expr inherits(object, "mixexpert_simstudy")
+#| eval: !expr inherits(object, "mixexpert_simstudy")
+cat("## Simulation", "\n\n")
+print("Not implemented yet") # TODO.
+```
+
+
+## Model
+
+::: {.callout-note collapse="true"}
+#### JAGS Code
+```{r input-stancode}
+#| results: asis
+cat("```{.r .cell-code}", object$model$model(), "```", sep = "\n")
+```
+:::
+
+
+::: {.callout-note collapse="true"}
+#### Prior Information
+```{r input-prior}
+#| results: asis
+cat(sprintf("- `%s = %s`", names(object$prior), object$prior), sep = "\n\n")
+```
+:::
+
+## Log Likelihood (In-sample)
+
+```{r output-log-lik}
+autoplot(object, "log_lik", c("density", "trace", "acf"), data = object$data)
+```
+
+
+## Parameters
+
+::: {.panel-tabset}
+### Regression
+```{r output-regr}
+#| opts.label: regr
+autoplot(object, "regr", c("density", "trace", "acf"))
+```
+
+### Weighting
+```{r output-wt}
+#| opts.label: wt
+autoplot(object, "wt", c("density", "trace", "acf"))
+```
+
+### Precision
+```{r output-prec}
+#| opts.label: prec
+autoplot(object, "prec", c("density", "trace", "acf"))
+```
+:::
+
+## Component Allocations
+
+```{r}
+local({
+  chain_selection <- seq_len(dim(object$output$regr)["chain"])
+  names(chain_selection) <- sprintf("Chain %s", seq_along(chain_selection))
+  
+  lapply(chain_selection, function(.chain) {
+    component_allocation_visualisation(object, .chain)
+  })
+})
+```
