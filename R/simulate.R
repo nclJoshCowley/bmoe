@@ -97,7 +97,7 @@ example_simulate_bmoe <- function(..., multiple_y = FALSE) {
     utils::modifyList(val = rlang::list2(...), list(
       n_s = 200,
       regr = regr,
-      wt = sweep_wt(array(0.1 * sample.int(12), dim = c(4, 3)), ref = 1),
+      wt = sweep_ref_vals(array(0.1 * sample.int(12), dim = c(4, 3)), ref = 1),
       prec = c(0.1, 0.5, 2.5),
       n_loo = 20,
       q_cens = NULL
@@ -125,14 +125,17 @@ simulate_multilogit <- function(x_wt, wt) {
   return(z)
 }
 
-
-#' Modify Weighting Matrix Reference Column
+#' Sweep Out Reference Values
 #'
-#' @param wt matrix. Weighting matrix.
-#' @param ref integer. Desired reference column to be set to 0.
+#' Translates matrix to satisfy corner constraint, say `x[, ref] = 0`.
 #'
-#' @keywords internal
-sweep_wt <- function(wt, ref = 1) sweep(wt, 1, wt[, ref], `-`)
+#' @returns Matrix with elements defined as `out[i, j] = x[i, j] - x[i, ref]`.
+#'
+#' @param x matrix. Matrix to be translated.
+#' @param ref integer. Column index to be used as reference.
+#'
+#' @export
+sweep_ref_vals <- function(x, ref = 1) sweep(x, 1, x[, ref], FUN = `-`)
 
 
 #' Artificial Censoring
