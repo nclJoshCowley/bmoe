@@ -20,7 +20,7 @@ component_allocation_visualisation <- function(object, chain) {
     return(lapply(chain, component_allocation_visualisation, object = object))
   }
 
-  k_labels <- get_names_from_mixexpert(object)$k
+  k_labels <- get_names_from_bmoe_fit(object)$k
 
   z_draws <-
     tidy(object$output$z, .dimnames = "i") |>

@@ -8,7 +8,8 @@
 #' @return Silently return the input `object` for use with pipes.
 #'
 #' @export
-render_mixexpert <- function(object, outfile) {
+render_bmoe_fit <- function(object, outfile) {
+  stopifnot(inherits(object, "bmoe_fit"))
   requireNamespace("quarto", quietly = TRUE)
 
   out_nm <- gsub("\\.(rds|html)$", "", basename(outfile), ignore.case = TRUE)
@@ -52,7 +53,7 @@ render_mixexpert <- function(object, outfile) {
 
 #' Functions used in Analysis Report
 #'
-#' Functions not to be used anywhere other than `mixexpert-analysis.qmd`.
+#' Functions not to be used anywhere other than `bmoe-analysis.qmd`.
 #'
 #' @inheritParams bmoe-package
 #' @param fig.asp numeric. Default aspect ratio per **panel**, not per plot.
@@ -60,8 +61,6 @@ render_mixexpert <- function(object, outfile) {
 #' @name bmoe-render-internal
 #' @export
 .set_bmoe_render_options <- function(object, fig.asp) {
-  stopifnot(inherits(object, "mixexpert"))
-
   p_regr <- dim(object$output$regr)[3]
   p_wt <- dim(object$output$wt)[3]
   n_y <- dim(object$output$prec)[3]

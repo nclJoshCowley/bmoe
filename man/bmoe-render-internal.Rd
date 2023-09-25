@@ -8,10 +8,10 @@
 .set_bmoe_render_options(object, fig.asp)
 }
 \arguments{
-\item{object}{Object that inherits from \code{\link{mixexpert}}.}
+\item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
 
 \item{fig.asp}{numeric. Default aspect ratio per \strong{panel}, not per plot.}
 }
 \description{
-Functions not to be used anywhere other than \code{mixexpert-analysis.qmd}.
+Functions not to be used anywhere other than \code{bmoe-analysis.qmd}.
 }

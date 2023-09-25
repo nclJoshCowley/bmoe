@@ -19,9 +19,9 @@
 #'
 #' @param object formula. User supplied model description.
 #'
-#' @aliases mixexpert-formula
+#' @aliases bmoe-formula
 #' @keywords internal
-parse_mixexpert_formula <- function(object) {
+parse_bmoe_formula <- function(object) {
   stopifnot(inherits(object, "formula"))
   is_lhs_empty <- length(object) == 2
 

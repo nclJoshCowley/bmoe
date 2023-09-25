@@ -4,19 +4,18 @@
 #'   with partitioned data, requires the user to add [layers][get_mcmc_layer].
 #'
 #' @inheritParams bmoe-package
-#' @param varname character. Single variable name including `regr`, `wt`,
-#'   `prec` and `log_lik`.
+#' @param varname character. Variable name defined in the model.
 #' @inheritParams get_mcmc_layer
 #' @param data Passed to [extract_log_lik], ignored otherwise.
-#' @inheritParams rlang::args_dots_empty
+#' @param ... Extra arguments silently ignored.
 #'
-#' @name mixexpert-plot
+#' @name bmoe-plot
 NULL
 
 
-#' @rdname mixexpert-plot
+#' @rdname bmoe-plot
 #' @export
-autoplot.mixexpert <- function(object, varname, type = "none", data, ...) {
+autoplot.bmoe_fit <- function(object, varname, type = "none", ..., data) {
   if (length(type) > 1) {
     names(type) <- gsub("^Acf$", "ACF", tools::toTitleCase(type))
 
@@ -43,10 +42,10 @@ autoplot.mixexpert <- function(object, varname, type = "none", data, ...) {
 }
 
 
-#' @inheritParams mixexpert-plot
+#' @inheritParams bmoe-plot
 #' @keywords internal
 autoplot_regr <- function(object) {
-  nms <- get_names_from_mixexpert(object)
+  nms <- get_names_from_bmoe_fit(object)
   n_x <- length(nms$x)
 
   regr_draws <- tidy(object$output$regr, .dimnames = c("x", "y", "k"))
@@ -73,10 +72,10 @@ autoplot_regr <- function(object) {
 }
 
 
-#' @inheritParams mixexpert-plot
+#' @inheritParams bmoe-plot
 #' @keywords internal
 autoplot_wt <- function(object) {
-  nms <- get_names_from_mixexpert(object)
+  nms <- get_names_from_bmoe_fit(object)
   n_x <- length(nms$x)
 
   wt_draws <- tidy(object$output$wt, .dimnames = c("x", "k"))
@@ -96,10 +95,10 @@ autoplot_wt <- function(object) {
 }
 
 
-#' @inheritParams mixexpert-plot
+#' @inheritParams bmoe-plot
 #' @keywords internal
 autoplot_prec <- function(object) {
-  nms <- get_names_from_mixexpert(object)
+  nms <- get_names_from_bmoe_fit(object)
   n_y <- length(nms$y)
 
   prec_draws <- tidy(object$output$prec, .dimnames = c("y", "k"))
@@ -119,7 +118,7 @@ autoplot_prec <- function(object) {
 }
 
 
-#' @inheritParams mixexpert-plot
+#' @inheritParams bmoe-plot
 #' @keywords internal
 autoplot_log_lik <- function(object, data) {
   log_liks <- extract_log_lik(object, data)

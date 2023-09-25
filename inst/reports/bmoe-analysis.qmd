@@ -16,18 +16,11 @@ library(ggplot2)
 library(patchwork)
 
 object <- 
-  # if (params$object$tag == "!expr") {
-  #   eval(parse(text = params$object$value))
-  # } else {
-  #   params$object
-  # }
-  xfun::cache_rds(file = "a", dir = "cache/", {
-    mixexpert(
-      example_simulate_mixexpert(n_s = 30, n_loo = 10, multiple_y = TRUE, q_cens = 0.1),
-      prior = mixexpert_prior(k = 3),
-      jags_n = list(n.update = 0, n.iter = 2000)
-    )
-  })
+  if (params$object$tag == "!expr") {
+    eval(parse(text = params$object$value))
+  } else {
+    params$object
+  }
 
 .set_bmoe_render_options(object, fig.asp = 0.4)
 ```
@@ -35,8 +28,8 @@ object <-
 
 ```{r input-bmoe-sim}
 #| output: asis
-#| include: !expr inherits(object, "mixexpert_simstudy")
-#| eval: !expr inherits(object, "mixexpert_simstudy")
+#| include: !expr inherits(object, "bmoe_simstudy")
+#| eval: !expr inherits(object, "bmoe_simstudy")
 cat("## Simulation", "\n\n")
 print("Not implemented yet") # TODO.
 ```

@@ -4,15 +4,15 @@
 #'
 #' @param y_list list. Response data per element; length is 1 when univariate.
 #' @param x_regr,x_wt matrix. Regression and weighting matrices.
-#' @inheritParams mixexpert
+#' @inheritParams bmoe
 #'
-#' @name mixexpert_yx
+#' @name bmoe_yx
 NULL
 
 
-#' @rdname mixexpert_yx
+#' @rdname bmoe_yx
 #' @keywords internal
-mixexpert_yx <- function(y_list, x_regr, x_wt, prior, jags_n, inits) {
+bmoe_yx <- function(y_list, x_regr, x_wt, prior, jags_n, inits) {
   stopifnot(setequal(
     names(prior),
     c("k", "regr_prec", "wt_prec", "prec_shape", "prec_rate")
@@ -21,11 +21,11 @@ mixexpert_yx <- function(y_list, x_regr, x_wt, prior, jags_n, inits) {
   any_Surv <- any(vapply(y_list, inherits, what = "Surv", logical(1)))
 
   if (any_Surv) {
-    jags_filename <- "mixexpert-cens.jags"
+    jags_filename <- "bmoe-cens.jags"
     y_data <- transpose_Surv_list(y_list)
 
   } else {
-    jags_filename <- "mixexpert.jags"
+    jags_filename <- "bmoe.jags"
     y_data <- list(y = do.call(cbind, y_list))
   }
 
@@ -52,7 +52,7 @@ mixexpert_yx <- function(y_list, x_regr, x_wt, prior, jags_n, inits) {
       varnames = c("regr", "wt", "z", "prec")
     )
 
-  return(structure(out, class = "mixexpert"))
+  return(structure(out, class = "bmoe_fit"))
 }
 
 

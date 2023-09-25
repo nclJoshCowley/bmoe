@@ -5,8 +5,8 @@
 #'
 #' @param file,data,inits Passed to [rjags::jags.model()].
 #'
-#' @inheritParams mixexpert
-#' @inheritSection mixexpert-args JAGS Controls
+#' @inheritParams bmoe
+#' @inheritSection bmoe-args JAGS Controls
 #'
 #' @param varnames character. Variable names to be monitored via JAGS.
 #'
@@ -60,7 +60,7 @@ complete_jags_fit <- function(file, data, inits, jags_n, varnames) {
     thin = jags_n$n.thin
   )
 
-  output <- lapply(output, mixexpert_array)
+  output <- lapply(output, bmoe_array)
 
   return(list(data = data, model = model, output = output, jags_n = jags_n))
 }

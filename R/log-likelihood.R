@@ -8,7 +8,7 @@
 #'
 #' @seealso The `loo` package for using these quantities in model comparison.
 #'
-#' @name mixexpert-log-lik
+#' @name bmoe-log-lik
 #' @export
 extract_pointwise_log_lik <- function(object, data) {
   mfs <- lapply(object$formula$regr, stats::model.frame, data = data)
@@ -29,7 +29,7 @@ extract_pointwise_log_lik <- function(object, data) {
     lapply(rlang::set_names(names(y_list)), function(.y) {
       structure(
         array(NA, dim = c(n_iters, n_chains, n_s)),
-        class = "mixexpert_array",
+        class = "bmoe_array",
         varname = sprintf("%s_log_lik", .y)
       )
     })
@@ -57,7 +57,7 @@ extract_pointwise_log_lik <- function(object, data) {
   return(out)
 }
 
-#' @rdname mixexpert-log-lik
+#' @rdname bmoe-log-lik
 #' @export
 extract_log_lik <- function(object, data) {
   lapply(
@@ -66,7 +66,7 @@ extract_log_lik <- function(object, data) {
       structure(
         apply(.x, 1:2, sum),
         dim = c(dim(.x)[c("iteration", "chain")], 1),
-        class = "mixexpert_array"
+        class = "bmoe_array"
       )
     }
   )
@@ -90,7 +90,7 @@ extract_log_lik <- function(object, data) {
 #'
 #' @export
 extract_posterior_expectations <- function(object, x_regr) {
-  y_nms <- rlang::set_names(get_names_from_mixexpert(object)$y)
+  y_nms <- rlang::set_names(get_names_from_bmoe_fit(object)$y)
 
   n_iters <- dim(object$output$regr)["iteration"]
   n_chains <- dim(object$output$regr)["chain"]
@@ -101,7 +101,7 @@ extract_posterior_expectations <- function(object, x_regr) {
     lapply(y_nms, function(.y) {
       structure(
         array(NA, dim = c(n_iters, n_chains, n_s)),
-        class = "mixexpert_array",
+        class = "bmoe_array",
         varname = sprintf("%s_mean", .y)
       )
     })

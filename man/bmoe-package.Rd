@@ -5,7 +5,7 @@
 \alias{bmoe-package}
 \title{Bayesian Mixture of Experts Package}
 \arguments{
-\item{object}{Object that inherits from \code{\link{mixexpert}}.}
+\item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
 }
 \description{
 Bayesian Mixture of Experts (MoE) applied to possibly left-censored

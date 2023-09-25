@@ -1,14 +1,14 @@
-#' MoE (`mixexpert`) Arguments
+#' Bayesian MoE (`bmoe`) Arguments
 #'
-#' Helper functions to assist in supplying arguments to [`mixexpert()`].
+#' Helper functions to assist in supplying arguments to [`bmoe()`].
 #'
 #' @param ... Overwrite default values.
 #'
-#' @name mixexpert-args
+#' @name bmoe-args
 NULL
 
 
-#' @rdname mixexpert-args
+#' @rdname bmoe-args
 #'
 #' @param k integer. Assumed number of components.
 #'
@@ -20,7 +20,7 @@ NULL
 #' - `prec` is element-wise IID Gamma with **prec_shape** and **prec_rate**.
 #'
 #' @export
-mixexpert_prior <- function(k, ...) {
+bmoe_prior <- function(k, ...) {
   defaults <-
     list(
       k = k, regr_prec = 0.1, wt_prec = 1, prec_shape = 2, prec_rate = 1
@@ -34,7 +34,7 @@ mixexpert_prior <- function(k, ...) {
 }
 
 
-#' @rdname mixexpert-args
+#' @rdname bmoe-args
 #'
 #' @section JAGS Controls:
 #' * `n.adapt` controls number of discarded samples in adaptation stage.
@@ -44,7 +44,7 @@ mixexpert_prior <- function(k, ...) {
 #' * `n.chains` controls number of chains.
 #'
 #' @export
-mixexpert_jags_n <- function(...) {
+bmoe_jags_n <- function(...) {
   defaults <-
     list(
       n.adapt = 2e3, n.update = 2e3, n.iter = 1e4, n.thin = 1, n.chains = 2

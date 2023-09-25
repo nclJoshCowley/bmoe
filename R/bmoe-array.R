@@ -1,38 +1,38 @@
 #' MCMC Array Type
 #'
 #' MCMC array structure, `c(n_iters, n_chains, dim(.)[1], dim(.)[2], ...)`,
-#'   used in this package
+#'   used in this package.
 #'
-#' @note Considered and decided against packages `posterior`, `mcmcr`, `rjags`.
-#'   There seems to be no standardised 'best' method to store MCMC output.
+#' @note For general MCMC array use, consider packages `posterior` and `mcmcr`
+#'   or the original object types in `rjags` and `coda`.
 #'
-#' @param x object. To be coerced to different format or name used in generc.
+#' @param x object. To be coerced to different format or name used in generic.
 #' @param fun function. Function to summarise when printing.
 #' @param ... Extra arguments passed on where appropriate.
 #'
 #' @export
-mixexpert_array <- function(x) {
-  UseMethod("mixexpert_array")
+bmoe_array <- function(x) {
+  UseMethod("bmoe_array")
 }
 
 
-#' @rdname mixexpert_array
+#' @rdname bmoe_array
 #' @export
-mixexpert_array.mcarray <- function(x) {
+bmoe_array.mcarray <- function(x) {
   which_mcmc_dims <- match(c("iteration", "chain"), names(dim(x)))
   which_par_dims <- setdiff(seq_along(dim(x)), which_mcmc_dims)
 
   out <- aperm(x, c(which_mcmc_dims, which_par_dims))
-  class(out) <- "mixexpert_array"
+  class(out) <- "bmoe_array"
   attr(out, "varname") <- attr(x, "varname")
 
   return(out)
 }
 
 
-#' @rdname mixexpert_array
+#' @rdname bmoe_array
 #' @export
-print.mixexpert_array <- function(x, fun = mean, ...) {
+print.bmoe_array <- function(x, fun = mean, ...) {
   varname <- attr(x, "varname") %||% "MISSING"
 
   cat(
@@ -58,14 +58,14 @@ print.mixexpert_array <- function(x, fun = mean, ...) {
 }
 
 
-#' @rdname mixexpert_array
+#' @rdname bmoe_array
 #'
 #' @param .dimnames character.
 #'   Default behaviour only adds `.term <chr>`; supplying dimension names
 #'   adds a column of indices for each dimension.
 #'
 #' @export
-tidy.mixexpert_array <- function(x, ..., .dimnames = NULL) {
+tidy.bmoe_array <- function(x, ..., .dimnames = NULL) {
   varname <- attr(x, "varname") %||% "par"
 
   names(dim(x)) <- gsub("^iteration$", ".iter", names(dim(x)))

@@ -7,7 +7,7 @@
 component_allocation_visualisation(object, chain)
 }
 \arguments{
-\item{object}{Object that inherits from \code{\link{mixexpert}}.}
+\item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
 
 \item{chain}{integer. Specified chain, multiple changes forces list output.}
 }

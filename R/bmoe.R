@@ -9,18 +9,19 @@
 #' @param inits list. Passed to `rjags::jags.model()`.
 #' @inheritParams rlang::args_dots_empty
 #'
-#' @inheritSection mixexpert-args Prior
-#' @inheritSection mixexpert-args JAGS Controls
+#' @inheritSection bmoe-args Prior
+#' @inheritSection bmoe-args JAGS Controls
 #'
+#' @aliases bmoe_fit
 #' @export
-mixexpert <- function(object, ..., prior, jags_n = NULL, inits = NULL) {
-  UseMethod("mixexpert")
+bmoe <- function(object, ..., prior, jags_n = NULL, inits = NULL) {
+  UseMethod("bmoe")
 }
 
 
-#' @rdname mixexpert
+#' @rdname bmoe
 #' @export
-mixexpert.mixexpert_sim <- function(object, ...,
+bmoe.bmoe_sim <- function(object, ...,
                                     prior, jags_n = NULL, inits = NULL) {
 
   y_nms <- grep("^y[0-9]+$", names(object$data), value = TRUE)
@@ -36,7 +37,7 @@ mixexpert.mixexpert_sim <- function(object, ...,
     )
 
   out <-
-    mixexpert.formula(
+    bmoe.formula(
       formula,
       data = object$data,
       # ...,
@@ -48,20 +49,20 @@ mixexpert.mixexpert_sim <- function(object, ...,
   out$params <- object$params
   out$new_data <- object$new_data
 
-  class(out) <- c("mixexpert_simstudy", class(out))
+  class(out) <- c("bmoe_simstudy", class(out))
 
   return(out)
 }
 
 
-#' @rdname mixexpert
+#' @rdname bmoe
 #' @export
-mixexpert.formula <- function(object, data, ...,
+bmoe.formula <- function(object, data, ...,
                               prior, jags_n = NULL, inits = NULL) {
 
-  formula <- parse_mixexpert_formula(object)
+  formula <- parse_bmoe_formula(object)
 
-  jags_n <- mixexpert_jags_n(jags_n)
+  jags_n <- bmoe_jags_n(jags_n)
 
   mfs <- lapply(formula$regr, stats::model.frame, data = data)
   mf_wt <- stats::model.frame(formula$wt, data = data)
@@ -70,7 +71,7 @@ mixexpert.formula <- function(object, data, ...,
   x_regr <- stats::model.matrix(mfs[[1]], data = mfs[[1]])
   x_wt <- stats::model.matrix(mf_wt, data = mf_wt)
 
-  out <- mixexpert_yx(y_list, x_regr, x_wt, prior, jags_n, inits)
+  out <- bmoe_yx(y_list, x_regr, x_wt, prior, jags_n, inits)
 
   out$prior <- prior
   out$inits <- inits
@@ -84,16 +85,16 @@ mixexpert.formula <- function(object, data, ...,
 
 #' @noRd
 #' @export
-print.mixexpert <- function(x, ...) {
+print.bmoe <- function(x, ...) {
   rlang::check_dots_empty()
-  cat({ out <- format.mixexpert(x) })
+  cat({ out <- format.bmoe(x) })
   invisible(out)
 }
 
 
 #' @noRd
 #' @export
-format.mixexpert <- function(x, ...) {
+format.bmoe <- function(x, ...) {
   rlang::check_dots_empty()
 
   regr_formatted <- lapply(x$formula$regr, format)
@@ -124,7 +125,7 @@ format.mixexpert <- function(x, ...) {
 #' @inheritParams bmoe-package
 #'
 #' @export
-get_names_from_mixexpert <- function(object) {
+get_names_from_bmoe_fit <- function(object) {
   list(
     y =
       names(object$formula$regr),

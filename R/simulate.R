@@ -16,10 +16,10 @@
 #' @param n_loo integer. Number of observations to be split into a test set.
 #' @param q_cens numeric \[0, 1\]. Optional artificial left-censoring level.
 #'
-#' @returns List with class `mixexpert_sim`.
+#' @returns List with class `bmoe_sim`.
 #'
 #' @export
-simulate_mixexpert <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
+simulate_bmoe <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
   stopifnot(length(dim(regr)) == 3)
 
   n_x <- dim(regr)[1] - 1
@@ -75,17 +75,17 @@ simulate_mixexpert <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
       ))
   }
 
-  return(structure(out, class = "mixexpert_sim"))
+  return(structure(out, class = "bmoe_sim"))
 }
 
 
-#' @rdname simulate_mixexpert
+#' @rdname simulate_bmoe
 #'
-#' @param ... Passed to `simulate_mixexpert`.
+#' @param ... Passed to `simulate_bmoe`.
 #' @param multiple_y logical. When `TRUE`, example defaults to multiple `y`.
 #'
 #' @export
-example_simulate_mixexpert <- function(..., multiple_y = FALSE) {
+example_simulate_bmoe <- function(..., multiple_y = FALSE) {
   regr <-
     if (multiple_y) {
       array(0.25 * sample.int(24), dim = c(4, 2, 3))
@@ -103,7 +103,7 @@ example_simulate_mixexpert <- function(..., multiple_y = FALSE) {
       q_cens = NULL
     ))
 
-  do.call(simulate_mixexpert, args)
+  do.call(simulate_bmoe, args)
 }
 
 
@@ -141,7 +141,7 @@ sweep_wt <- function(wt, ref = 1) sweep(wt, 1, wt[, ref], `-`)
 #'   chosen quantiles.
 #'
 #' @param x vector. Uncensored numerical data.
-#' @inheritParams simulate_mixexpert
+#' @inheritParams simulate_bmoe
 #'
 #' @returns Surv object.
 #' @keywords internal
