@@ -59,3 +59,29 @@ bmoe_jags_n <- function(...) {
 
   return(out)
 }
+
+
+#' @rdname bmoe-args
+#'
+#' @section JAGS Initial Values:
+#' Optional chain starting values, as described in [`rjags::jags.model()`].
+#'
+#' @param seed_base numeric. Seed are set equal to `seed_base` multiplied by
+#'   chain index.
+#' @param .RNG.name character. JAGS RNG method.
+#'
+#' @export
+bmoe_inits <- function(seed_base, .RNG.name = "base::Wichmann-Hill", ...) {
+  dots <- rlang::list2(...)
+
+  rlang::new_function(
+    args = rlang::pairlist2(chain = ),
+    body = rlang::expr({
+      list(
+        `.RNG.name` = !!.RNG.name,
+        `.RNG.seed` = !!seed_base * !!quote(chain),
+        !!!dots
+      )
+    })
+  )
+}

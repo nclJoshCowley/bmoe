@@ -14,15 +14,15 @@
 #'
 #' @aliases bmoe_fit
 #' @export
-bmoe <- function(object, ..., prior, jags_n = NULL, inits = NULL) {
+bmoe <- function(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL) {
   UseMethod("bmoe")
 }
 
 
 #' @rdname bmoe
 #' @export
-bmoe.bmoe_sim <- function(object, ...,
-                                    prior, jags_n = NULL, inits = NULL) {
+bmoe.bmoe_sim <- function(object, ..., prior,
+                          jags_n = bmoe_jags_n(), inits = NULL) {
 
   y_nms <- grep("^y[0-9]+$", names(object$data), value = TRUE)
   y_sym <- lapply(y_nms, as.symbol)
@@ -57,8 +57,8 @@ bmoe.bmoe_sim <- function(object, ...,
 
 #' @rdname bmoe
 #' @export
-bmoe.formula <- function(object, data, ...,
-                              prior, jags_n = NULL, inits = NULL) {
+bmoe.formula <- function(object, data, ..., prior,
+                         jags_n = bmoe_jags_n(), inits = NULL) {
 
   formula <- parse_bmoe_formula(object)
 

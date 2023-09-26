@@ -7,11 +7,11 @@
 \alias{bmoe.formula}
 \title{Bayesian Mixture of Experts Linear Regression.}
 \usage{
-bmoe(object, ..., prior, jags_n = NULL, inits = NULL)
+bmoe(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
 
-\method{bmoe}{bmoe_sim}(object, ..., prior, jags_n = NULL, inits = NULL)
+\method{bmoe}{bmoe_sim}(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
 
-\method{bmoe}{formula}(object, data, ..., prior, jags_n = NULL, inits = NULL)
+\method{bmoe}{formula}(object, data, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
 }
 \arguments{
 \item{object}{object. A formula or simulated object.}

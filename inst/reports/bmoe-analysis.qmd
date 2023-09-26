@@ -85,7 +85,8 @@ autoplot(object, "prec", c("density", "trace", "acf"))
 
 ## Component Allocations
 
-```{r}
+```{r output-z}
+#| fig-asp: 0.65
 local({
   chain_selection <- seq_len(dim(object$output$regr)["chain"])
   names(chain_selection) <- sprintf("Chain %s", seq_along(chain_selection))
