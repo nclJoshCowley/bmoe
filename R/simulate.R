@@ -107,6 +107,58 @@ example_simulate_bmoe <- function(..., multiple_y = FALSE) {
 }
 
 
+#' @describeIn simulate_bmoe Reproducible example of label switching example.
+#' @export
+example_label_switching_bmoe <- function() {
+  # stop("Not implemented. Parameters causing label switching not defined")
+
+  saved_seed <- get0(".Random.seed")
+  on.exit(assign(".Random.seed", saved_seed, envir = .GlobalEnv))
+  set.seed(40)
+
+  p_regr <- 6
+  k <- 3
+
+  regr <- array(sample.int(p_regr * k), dim = c(p_regr, 1, k))
+  prec <- t(c(0.5, 0.5, 1))
+
+  wt <- sweep_ref_vals(0.1 * matrix(sample.int(p_regr * k), p_regr, k))
+  # wt <- rbind(c(0, 0.2, -0.1), c(0, 0.4, 0.1))
+
+  sim <-
+    bmoe::simulate_bmoe(
+      n_s = 80,
+      regr = regr,
+      wt = wt,
+      prec = prec,
+      n_loo = 0,
+      q_cens = NULL
+    )
+
+  out <-
+    bmoe::bmoe(
+      sim,
+      prior = list(
+        k = 3,
+        regr_prec = 0.1,
+        wt_prec = 1,
+        prec_shape = 1, prec_rate = 1
+      ),
+      jags_n = list(n.chains = 1, n.update = 0),
+      inits = bmoe::bmoe_inits(seed_base = 1)
+    )
+
+  ## DEBUG
+  message("regr[,,]) = \n"); print(sim$params$regr)
+  message("wt[,]) = \n"); print(sim$params$wt)
+  message("table(z[,]) = \n"); print(table(sim$params$z))
+  render_bmoe_fit(out, "temp/ls")
+  ## DEBUG
+
+  return(out)
+
+}
+
 #' Multinomial Logit Simulation
 #'
 #' @param x_wt matrix (`n` by `p_w`). Design matrix to be used in weighting.

@@ -54,11 +54,29 @@ cat(sprintf("- `%s = %s`", names(object$prior), object$prior), sep = "\n\n")
 ```
 :::
 
+
 ## Log Likelihood (In-sample)
 
 ```{r output-log-lik}
 autoplot(object, "log_lik", c("density", "trace", "acf"), data = object$data)
 ```
+
+
+
+```{r input-label-switching}
+permutations <- attr(object, "permutations")
+```
+
+```{r output-label-switching-heading}
+if (!is.null(permutations)) knitr::asis_output("## Label Switching\n\n")
+```
+
+```{r output-label-switching-table}
+if (!is.null(permutations)) {
+  lapply(table_permutations(permutations), knitr::kable)
+}
+```
+
 
 
 ## Parameters

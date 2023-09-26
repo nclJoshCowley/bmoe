@@ -3,11 +3,14 @@
 \name{simulate_bmoe}
 \alias{simulate_bmoe}
 \alias{example_simulate_bmoe}
+\alias{example_label_switching_bmoe}
 \title{Simulate \strong{Mixture of Experts Linear Regression}}
 \usage{
 simulate_bmoe(n_s, regr, wt, prec, n_loo, q_cens = NULL)
 
 example_simulate_bmoe(..., multiple_y = FALSE)
+
+example_label_switching_bmoe()
 }
 \arguments{
 \item{n_s}{integer. Number of observations.}
@@ -41,3 +44,8 @@ variable. Hence, \code{dim(wt) = c(n_x + 1, n_k)}.
 \item The simulated \code{x} matrix is used for both regression and weighting.
 }
 }
+\section{Functions}{
+\itemize{
+\item \code{example_label_switching_bmoe()}: Reproducible example of label switching example.
+
+}}
