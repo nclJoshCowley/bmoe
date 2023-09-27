@@ -72,7 +72,8 @@ layer_trace <- function() {
         y = .data$.value,
         x = .data$.iter,
         colour = factor(.data$.chain)
-      )
+      ),
+      alpha = 0.55
     ),
 
     labs = ggplot2::labs(x = "Iteration", y = "Value", colour = "Chain"),
