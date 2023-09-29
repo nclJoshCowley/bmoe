@@ -55,6 +55,14 @@ cat(sprintf("- `%s = %s`", names(object$prior), object$prior), sep = "\n\n")
 :::
 
 
+::: {.callout-note collapse="true"}
+#### JAGS Controls
+```{r input-prior}
+#| results: asis
+cat(sprintf("- `%s = %s`", names(object$jags_n), object$jags_n), sep = "\n\n")
+```
+:::
+
 ## Log Likelihood (In-sample)
 
 ```{r output-log-lik}
