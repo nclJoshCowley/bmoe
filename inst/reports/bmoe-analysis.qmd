@@ -15,14 +15,18 @@ library(bmoe)
 library(ggplot2)
 library(patchwork)
 
-object <- 
-  if (params$object$tag == "!expr") {
-    eval(parse(text = params$object$value))
-  } else {
-    params$object
-  }
+is_child <- exists("object")
 
-.set_bmoe_render_options(object, fig.asp = 0.4)
+if (!(is_child)) {
+  object <- 
+    if (params$object$tag == "!expr") {
+      eval(parse(text = params$object$value))
+    } else {
+      params$object
+    }
+}
+
+.set_bmoe_render_options(object, is_child = is_child,  fig.asp = 0.4)
 ```
 
 
@@ -57,7 +61,7 @@ cat(sprintf("- `%s = %s`", names(object$prior), object$prior), sep = "\n\n")
 
 ::: {.callout-note collapse="true"}
 #### JAGS Controls
-```{r input-prior}
+```{r input-jags-n}
 #| results: asis
 cat(sprintf("- `%s = %s`", names(object$jags_n), object$jags_n), sep = "\n\n")
 ```

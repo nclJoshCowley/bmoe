@@ -56,21 +56,26 @@ render_bmoe_fit <- function(object, outfile) {
 #' Functions not to be used anywhere other than `bmoe-analysis.qmd`.
 #'
 #' @inheritParams bmoe-package
+#' @param is_child logical. Some options are only set when this is `FALSE`.
 #' @param fig.asp numeric. Default aspect ratio per **panel**, not per plot.
 #'
 #' @name bmoe-render-internal
 #' @export
-.set_bmoe_render_options <- function(object, fig.asp) {
+.set_bmoe_render_options <- function(object, is_child, fig.asp) {
+  if (isFALSE(is_child)) {
+    ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
+
+    knitr::opts_chunk$set(
+      echo = FALSE, message = FALSE, fig.asp = fig.asp, out.width = "100%"
+    )
+  }
+
+  # Child documents to inherit `fig.asp`
+  fig.asp <- knitr::opts_chunk$get("fig.asp")
+
   p_regr <- dim(object$output$regr)[3]
   p_wt <- dim(object$output$wt)[3]
   n_y <- dim(object$output$prec)[3]
-
-  knitr::opts_chunk$set(
-    echo = FALSE,
-    message = FALSE,
-    fig.asp = fig.asp,
-    out.width = "100%"
-  )
 
   knitr::opts_template$set(
     regr = list(fig.asp = fig.asp * p_regr),
@@ -79,8 +84,6 @@ render_bmoe_fit <- function(object, outfile) {
   )
 
   s3_register("knitr::knit_print", "list", bmoe::printer_tabset)
-
-  ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
 
   invisible(NULL)
 }

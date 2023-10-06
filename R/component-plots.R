@@ -32,7 +32,7 @@ component_allocation_visualisation <- function(object, chain) {
     dplyr::filter(.data$.chain %in% chain) |>
     ggplot2::ggplot() +
     ggplot2::geom_raster(mapping = mapping) +
-    ggplot2::labs(y = "Index", x = "Iterations") +
+    ggplot2::labs(y = "Index", x = "Iterations", fill = NULL) +
     ggplot2::scale_fill_discrete(name = NULL, drop = FALSE) +
     scale_x_iterations()
 }
