@@ -3,15 +3,15 @@
 \name{bmoe}
 \alias{bmoe}
 \alias{bmoe_fit}
-\alias{bmoe.bmoe_sim}
 \alias{bmoe.formula}
+\alias{bmoe.bmoe_sim}
 \title{Bayesian Mixture of Experts Linear Regression.}
 \usage{
 bmoe(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
 
-\method{bmoe}{bmoe_sim}(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
-
 \method{bmoe}{formula}(object, data, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
+
+\method{bmoe}{bmoe_sim}(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL)
 }
 \arguments{
 \item{object}{object. A formula or simulated object.}

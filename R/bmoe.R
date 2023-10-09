@@ -21,6 +21,34 @@ bmoe <- function(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL) {
 
 #' @rdname bmoe
 #' @export
+bmoe.formula <- function(object, data, ..., prior,
+                         jags_n = bmoe_jags_n(), inits = NULL) {
+
+  formula <- parse_bmoe_formula(object)
+
+  jags_n <- bmoe_jags_n(jags_n)
+
+  mfs <- lapply(formula$regr, stats::model.frame, data = data)
+  mf_wt <- stats::model.frame(formula$wt, data = data)
+
+  y_list <- lapply(mfs, stats::model.response)
+  x_regr <- stats::model.matrix(mfs[[1]], data = mfs[[1]])
+  x_wt <- stats::model.matrix(mf_wt, data = mf_wt)
+
+  out <- bmoe_yx(y_list, x_regr, x_wt, prior, jags_n, inits)
+
+  out$prior <- prior
+  out$inits <- inits
+  out$formula <- formula
+
+  out$data <- data
+
+  return(out)
+}
+
+
+#' @rdname bmoe
+#' @export
 bmoe.bmoe_sim <- function(object, ..., prior,
                           jags_n = bmoe_jags_n(), inits = NULL) {
 
@@ -50,34 +78,6 @@ bmoe.bmoe_sim <- function(object, ..., prior,
   out$new_data <- object$new_data
 
   class(out) <- c("bmoe_simstudy", class(out))
-
-  return(out)
-}
-
-
-#' @rdname bmoe
-#' @export
-bmoe.formula <- function(object, data, ..., prior,
-                         jags_n = bmoe_jags_n(), inits = NULL) {
-
-  formula <- parse_bmoe_formula(object)
-
-  jags_n <- bmoe_jags_n(jags_n)
-
-  mfs <- lapply(formula$regr, stats::model.frame, data = data)
-  mf_wt <- stats::model.frame(formula$wt, data = data)
-
-  y_list <- lapply(mfs, stats::model.response)
-  x_regr <- stats::model.matrix(mfs[[1]], data = mfs[[1]])
-  x_wt <- stats::model.matrix(mf_wt, data = mf_wt)
-
-  out <- bmoe_yx(y_list, x_regr, x_wt, prior, jags_n, inits)
-
-  out$prior <- prior
-  out$inits <- inits
-  out$formula <- formula
-
-  out$data <- data
 
   return(out)
 }
