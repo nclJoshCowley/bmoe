@@ -7,18 +7,31 @@
 #'   or the original object types in `rjags` and `coda`.
 #'
 #' @param x object. To be coerced to different format or name used in generic.
+#' @param varname character. Variable name of the stored quantity.
 #' @param fun function. Function to summarise when printing.
-#' @param ... Extra arguments passed on where appropriate.
+#' @param ... Passed on for S3 methods; ignored in `bmoe_array`.
 #'
 #' @export
-bmoe_array <- function(x) {
+bmoe_array <- function(x, ...) {
   UseMethod("bmoe_array")
 }
 
 
 #' @rdname bmoe_array
 #' @export
-bmoe_array.mcarray <- function(x) {
+bmoe_array.array <- function(x, ..., varname) {
+  names(dim(x))[1:2] <- c("iteration", "chain")
+
+  class(x) <- "bmoe_array"
+  attr(x, "varname") <- varname
+
+  return(x)
+}
+
+
+#' @rdname bmoe_array
+#' @export
+bmoe_array.mcarray <- function(x, ...) {
   which_mcmc_dims <- match(c("iteration", "chain"), names(dim(x)))
   which_par_dims <- setdiff(seq_along(dim(x)), which_mcmc_dims)
 

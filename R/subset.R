@@ -20,6 +20,10 @@ subset_bmoe <- function(object, iters = NULL, chains = NULL) {
   object$output$wt <- object$output$wt[iters, chains, , , drop = FALSE]
   object$output$z <- object$output$z[iters, chains, , drop = FALSE]
 
+  for (nm in names(object$output)) {
+    object$output[[nm]] <- bmoe_array(object$output[[nm]], varname = nm)
+  }
+
   object$jags_n$n.iter <- length(iters)
   object$jags_n$n.chains <- length(chains)
 

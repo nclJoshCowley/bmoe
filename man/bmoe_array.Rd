@@ -2,14 +2,17 @@
 % Please edit documentation in R/bmoe-array.R
 \name{bmoe_array}
 \alias{bmoe_array}
+\alias{bmoe_array.array}
 \alias{bmoe_array.mcarray}
 \alias{print.bmoe_array}
 \alias{tidy.bmoe_array}
 \title{MCMC Array Type}
 \usage{
-bmoe_array(x)
+bmoe_array(x, ...)
 
-\method{bmoe_array}{mcarray}(x)
+\method{bmoe_array}{array}(x, ..., varname)
+
+\method{bmoe_array}{mcarray}(x, ...)
 
 \method{print}{bmoe_array}(x, fun = mean, ...)
 
@@ -18,9 +21,11 @@ bmoe_array(x)
 \arguments{
 \item{x}{object. To be coerced to different format or name used in generic.}
 
-\item{fun}{function. Function to summarise when printing.}
+\item{...}{Passed on for S3 methods; ignored in \code{bmoe_array}.}
 
-\item{...}{Extra arguments passed on where appropriate.}
+\item{varname}{character. Variable name of the stored quantity.}
+
+\item{fun}{function. Function to summarise when printing.}
 
 \item{.dimnames}{character.
 Default behaviour only adds \verb{.term <chr>}; supplying dimension names
