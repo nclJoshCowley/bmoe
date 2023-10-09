@@ -5,10 +5,12 @@
 \alias{.set_bmoe_render_options}
 \title{Functions used in Analysis Report}
 \usage{
-.set_bmoe_render_options(object, fig.asp)
+.set_bmoe_render_options(object, is_child, fig.asp)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
+
+\item{is_child}{logical. Some options are only set when this is \code{FALSE}.}
 
 \item{fig.asp}{numeric. Default aspect ratio per \strong{panel}, not per plot.}
 }
