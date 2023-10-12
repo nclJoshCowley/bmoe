@@ -118,6 +118,43 @@ format.bmoe <- function(x, ...) {
 }
 
 
+#' Subset MCMC Output
+#'
+#' Subset the MCMC output and update details within a [`bmoe()`] fit.
+#'
+#' @inheritParams bmoe-package
+#' @param iters integer. Vector of indices to keep, default includes all.
+#' @param chains integer. Vector of chains to keep, default includes all.
+#'
+#' @export
+subset_bmoe <- function(object, iters = NULL, chains = NULL) {
+  stopifnot(inherits(object, "bmoe_fit"))
+
+  n_chains_pre <- object$jags_n$n.chains
+
+  if (is.null(iters)) iters <- seq_len(dim(object$output$regr)["iteration"])
+  if (is.null(chains)) chains <- seq_len(dim(object$output$regr)["chain"])
+
+  object$output$prec <- object$output$prec[iters, chains, , , drop = FALSE]
+  object$output$regr <- object$output$regr[iters, chains, , , , drop = FALSE]
+  object$output$wt <- object$output$wt[iters, chains, , , drop = FALSE]
+  object$output$z <- object$output$z[iters, chains, , drop = FALSE]
+
+  for (nm in names(object$output)) {
+    object$output[[nm]] <- bmoe_array(object$output[[nm]], varname = nm)
+  }
+
+  object$jags_n$n.iter <- length(iters)
+  object$jags_n$n.chains <- length(chains)
+
+  if (is.list(object$inits) && length(object$inits) == n_chains_pre) {
+    object$inits <- object$inits[[chains]]
+  }
+
+  return(object)
+}
+
+
 #' Get Human Readable Names
 #'
 #' Helper to access names from data (`y`, `x`, `k`) to be displayed to users.
@@ -138,4 +175,22 @@ get_names_from_bmoe_fit <- function(object) {
     k =
       sprintf("k = %i", seq_len(object$prior$k))
   )
+}
+
+
+#' Get Regression Design Matrix (`x_regr`)
+#'
+#' Helper to access `x_regr` and verify a common RHS to regression formulas.
+#'
+#' @inheritParams bmoe-package
+#'
+#' @export
+get_x_regr_from_bmoe_fit <- function(object, data) {
+  mfs <- lapply(object$formula$regr, stats::model.frame, data = data)
+
+  x_regr_list <- unique(lapply(mfs, stats::model.matrix, data = data))
+
+  if (length(x_regr_list) > 1) stop("Regression formulas have different RHS")
+
+  return(x_regr_list[[1]])
 }

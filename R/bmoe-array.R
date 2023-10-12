@@ -110,6 +110,71 @@ tidy.bmoe_array <- function(x, ..., .dimnames = NULL) {
 }
 
 
+#' Apply function to each MCMC Draw
+#'
+#' Maps a function over each MCMC iteration and chain of a [`bmoe_array`].
+#'
+#' @param .l list of `bmoe_array`. Only MCMC inputs should be placed here.
+#' @param .f function. To be applied over each draws.
+#' @param ... Deterministic arguments. Same value are passed to `.f` each time.
+#'
+#' @returns A newly generated MCMC quantity, stored as a `bmoe_array`.
+#'
+#' @export
+pmap_bmoe_array <- function(.l, .f, ..., varname = NULL) {
+  stopifnot("MCMC objects should be wrapped in a list" = is.list(.l))
+
+  ni <- unique(vapply(.l, nrow, integer(1)))
+  if (length(ni) > 1) stop("Number of iterations mismatch: ", toString(ni))
+
+  nc <- unique(vapply(.l, ncol, integer(1)))
+  if (length(nc) > 1) stop("Number of chains mismatch: ", toString(ni))
+
+  # Need to perform calculation once to get an idea of dimensions
+  l_proto <- lapply(.l, extract_single_draw, chain = 1, iter = 1)
+  out_proto <- do.call(.f, c(l_proto, list(...)))
+
+  out_dims <- dim(out_proto) %||% length(out_proto)
+
+  out <- array(NA, dim = c(ni, nc, out_dims))
+
+  lhs_expr <- quote(out[ii, ic, ])[c(1:4, rep(5, length(out_dims)))]
+
+  for (ii in seq_len(ni)) {
+    for (ic in seq_len(nc)) {
+      current_l <- lapply(.l, extract_single_draw, chain = ic, iter = ii)
+      eval(rlang::expr(
+        !!lhs_expr <- do.call(.f, c(current_l, list(...)))
+      ))
+    }
+  }
+
+  return(bmoe_array.array(out, varname = varname))
+}
+
+
+#' Extract Single Draw
+#'
+#' Extract a single draw for specified iteration and chain.
+#'
+#' @note Only the MCMC dimensions are [dropped][drop].
+#'
+#' @param x [`bmoe_array`] object.
+#' @param iter,chain integer. MCMC indexes to extract from.
+#'
+#' @keywords internal
+extract_single_draw <- function(x, iter, chain) {
+  vardims <- dim(x)[-c(1, 2)]
+
+  missing_args <- rep(list(rlang::missing_arg()), length(vardims))
+
+  out_expr <-
+    rlang::call2("[", quote(x), iter, chain, !!!missing_args, drop = FALSE)
+
+  return(structure(eval(out_expr), dim = vardims))
+}
+
+
 #' Unite Columns into String
 #'
 #' @param data data frame. Contains columns to be joined.

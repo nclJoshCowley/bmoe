@@ -6,15 +6,15 @@
 \alias{extract_log_lik}
 \title{Extract Pointwise Log Likelihood}
 \usage{
-extract_pointwise_log_lik(object, data)
+extract_pointwise_log_lik(object, new_data)
 
-extract_log_lik(object, data)
+extract_log_lik(object, new_data)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
 
-\item{data}{data frame. Used in calculation;
-\code{object$data} yields in-sample result.}
+\item{new_data}{data frame. Data used to create a design matrices.
+Setting \code{new_data = NULL} utilises the trained model (special case).}
 }
 \description{
 Offline computation of log likelihood for each response variable.

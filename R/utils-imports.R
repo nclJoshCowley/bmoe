@@ -1,4 +1,5 @@
 utils::globalVariables(".")
+utils::globalVariables("!<-")
 
 
 #' @importFrom ggplot2 autoplot

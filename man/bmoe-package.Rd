@@ -6,6 +6,9 @@
 \title{Bayesian Mixture of Experts Package}
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
+
+\item{new_data}{data frame. Data used to create a design matrices.
+Setting \code{new_data = NULL} utilises the trained model (special case).}
 }
 \description{
 Bayesian Mixture of Experts (MoE) applied to possibly left-censored
