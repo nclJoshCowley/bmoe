@@ -70,7 +70,7 @@ cat(sprintf("- `%s = %s`", names(object$jags_n), object$jags_n), sep = "\n\n")
 ## Log Likelihood (In-sample)
 
 ```{r output-log-lik}
-autoplot(object, "log_lik", c("density", "trace", "acf"), data = object$data)
+autoplot(object, "log_lik", c("density", "trace", "acf"), new_data = NULL)
 ```
 
 
