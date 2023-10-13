@@ -85,16 +85,16 @@ bmoe.bmoe_sim <- function(object, ..., prior,
 
 #' @noRd
 #' @export
-print.bmoe <- function(x, ...) {
+print.bmoe_fit <- function(x, ...) {
   rlang::check_dots_empty()
-  cat({ out <- format.bmoe(x) })
+  cat({ out <- format.bmoe_fit(x) })
   invisible(out)
 }
 
 
 #' @noRd
 #' @export
-format.bmoe <- function(x, ...) {
+format.bmoe_fit <- function(x, ...) {
   rlang::check_dots_empty()
 
   regr_formatted <- lapply(x$formula$regr, format)
