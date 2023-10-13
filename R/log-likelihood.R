@@ -11,22 +11,24 @@
 extract_pointwise_log_lik <- function(object, new_data) {
   cur_data <- if (is.null(new_data)) object$data else new_data
 
-  y_posterior_params <-
-    calculate_posterior_params(object, new_data, separate = TRUE)
-
   mfs <- lapply(object$formula$regr, stats::model.frame, data = cur_data)
+  y_datalist <- lapply(mfs, stats::model.response)
 
-  y_list <- lapply(mfs, stats::model.response)
+  z <- calculate_component_samples(object, new_data)
+
+  y_mean <- calculate_posterior_y_mean(object, new_data, z, separate = TRUE)
+  y_sd <- calculate_posterior_y_sd(object, z, separate = TRUE)
+
 
   Map(
     function(y, nm, mean, sd) {
-      calc_log_lik <- function(...) log(d_lcens_norm(y, ...))
+      calc_log_lik <- function(.mean, .sd) log(d_lcens_norm(y, .mean, .sd))
       pmap_bmoe_array(list(mean, sd), calc_log_lik, varname = nm)
     },
-    y = y_list,
-    nm = lapply(names(y_list), function(.nm) sprintf("log_lik_%s", .nm)),
-    mean = y_posterior_params$y_means,
-    sd = y_posterior_params$y_sds
+    y = y_datalist,
+    nm = lapply(names(y_datalist), function(.nm) sprintf("log_lik_%s", .nm)),
+    mean = y_mean,
+    sd = y_sd
   )
 }
 
@@ -66,7 +68,3 @@ d_lcens_norm <- function(x, mean, sd) {
     stats::pnorm(x[, "time"], mean, sd)
   )
 }
-
-
-
-

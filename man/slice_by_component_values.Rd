@@ -9,7 +9,7 @@ slice_by_component_values(x, z)
 \description{
 Delegates 'per component' slicing to get
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{for (i in ...) x[i, z[i]]
+\if{html}{\out{<div class="sourceCode">}}\preformatted{for (i in seq_along(z)) x[i, z[i]]
 }\if{html}{\out{</div>}}
 
 unlike \code{x[i, z[i]]} which returns a matrix.

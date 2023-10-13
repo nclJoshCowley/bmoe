@@ -12,6 +12,8 @@ pmap_bmoe_array(.l, .f, ..., varname = NULL)
 \item{.f}{function. To be applied over each draws.}
 
 \item{...}{Deterministic arguments. Same value are passed to \code{.f} each time.}
+
+\item{varname}{character. Variable name of the stored quantity.}
 }
 \value{
 A newly generated MCMC quantity, stored as a \code{bmoe_array}.

@@ -1,56 +1,61 @@
-#' Calculate Model Fit's Posterior Mean and Standard Deviation
+#' Generated Quantities from Model Fit
+#'
+#' Offline calculations can
 #'
 #' @inheritParams bmoe-package
-#' @param separate logical. Splits the output into multiple arrays when `TRUE`.
+#' @param z [`bmoe_array`]. Component allocation samples (latent variable).
+#' @param separate logical. Output is split by response variable when `TRUE`.
 #'
-#' @family Posterior calculation functions
+#' @name bmoe-calculate
+NULL
+
+
+#' Retrieve or Simulate New Component Allocation Samples
+#'
+#' @rdname bmoe-calculate
 #' @export
-calculate_posterior_params <- function(object, new_data, separate = FALSE) {
-  use_trained <- is.null(new_data)
+calculate_component_samples <- function(object, new_data) {
+  if (is.null(new_data)) return(object$output$z)
 
-  if (use_trained) new_data <- object$data
+  wt <- object$output$wt
+  x_wt <- stats::model.matrix(object$formula$wt, data = new_data)
 
-  x_regr <- get_x_regr_from_bmoe_fit(object, data = new_data)
+  all_labels <- seq_len(dim(wt)[4])
 
-  if (use_trained) {
-    z <- object$output$z
-  } else {
-    x_wt <- stats::model.matrix(object$formula$wt, data = new_data)
-    z <- calculate_component_samples(object$output$wt, x_wt, "z")
-  }
+  probs <- pmap_bmoe_array(list(wt), function(.wt) softmax(x_wt %*% .wt))
 
-  out <-
-    list(
-      y_means = calculate_posterior_means(z, object$output$regr, x_regr, NULL),
-      y_sds = calculate_posterior_sds(z, object$output$prec, NULL)
-    )
-
-  if (isFALSE(separate)) return(out)
-
-  out$y_means <- lapply(asplit(out$y_means, 4), bmoe_array, varname = NULL)
-  out$y_sds <- lapply(asplit(out$y_sds, 4), bmoe_array, varname = NULL)
-  return(out)
+  pmap_bmoe_array(
+    list(probs = probs),
+    function(probs) {
+      apply(probs, 1, function(.p) sample(all_labels, size = 1, prob = .p))
+    },
+    varname = "z"
+  )
 }
 
 
 #' Calculate Model Fit's Posterior Mean(s)
 #'
-#' @param z [`bmoe_array`]. Component allocation (latent variable) output.
-#' @param regr [`bmoe_array`]. Regression coefficient output.
-#' @param x_regr matrix. Required design matrix.
-#' @inheritParams bmoe_array
-#'
-#' @rdname calculate_posterior_params
+#' @rdname bmoe-calculate
 #' @export
-calculate_posterior_means <- function(z, regr, x_regr, varname) {
+calculate_posterior_y_mean <- function(object, new_data, z, separate = FALSE) {
+  regr <- object$output$regr
+  x_regr <- calculate_x_regr(object, new_data)
+
   stopifnot(dim(z)[3] == nrow(x_regr))
 
-  pmap_bmoe_array(
-    list(.z = z, .regr = regr),
-    c_posterior_means,
-    x_regr = x_regr,
-    varname = varname
-  )
+  out <-
+    pmap_bmoe_array(
+      list(.z = z, .regr = regr),
+      c_posterior_means,
+      x_regr = x_regr,
+      varname = "y_mean"
+    )
+
+  if (isFALSE(separate)) return(out)
+
+  varnames <- sprintf("y_mean_%s", get_names_from_bmoe_fit(object)$y)
+  Map(bmoe_array, asplit(out, 4), varname = varnames)
 }
 
 
@@ -70,18 +75,20 @@ c_posterior_means <- function(.z, .regr, x_regr) {
 
 #' Calculate Model Fit's Posterior Standard Deviation(s)
 #'
-#' @param z [`bmoe_array`]. Component allocation (latent variable) output.
-#' @param prec [`bmoe_array`]. Precision matrix output.
-#' @inheritParams bmoe_array
-#'
-#' @rdname calculate_posterior_params
+#' @rdname bmoe-calculate
 #' @export
-calculate_posterior_sds <- function(z, prec, varname) {
-  pmap_bmoe_array(
-    list(.z = z, .prec = prec),
-    c_posterior_sds,
-    varname = varname
-  )
+calculate_posterior_y_sd <- function(object, z, separate = FALSE) {
+  out <-
+    pmap_bmoe_array(
+      list(.z = z, .prec = object$output$prec),
+      c_posterior_sds,
+      varname = "y_sd"
+    )
+
+  if (isFALSE(separate)) return(out)
+
+  varnames <- sprintf("y_sd_%s", get_names_from_bmoe_fit(object)$y)
+  Map(bmoe_array, asplit(out, 4), varname = varnames)
 }
 
 
@@ -94,26 +101,22 @@ c_posterior_sds <- function(.z, .prec) {
 }
 
 
-#' Simulate New Component Allocation Samples
+#' Retrieve Regression Design Matrix
 #'
-#' @param wt [`bmoe_array`]. Model contribution to probabilities
-#' @param x_wt matrix. Data contribution to probabilities
-#' @inheritParams bmoe_array
+#' Helper to access `x_regr` and verify a common RHS to regression formulas.
 #'
-#' @family Posterior calculation functions
+#' @rdname bmoe-calculate
 #' @export
-calculate_component_samples <- function(wt, x_wt, varname) {
-  all_labels <- seq_len(dim(wt)[4])
+calculate_x_regr <- function(object, new_data) {
+  if (is.null(new_data)) new_data <- object$data
 
-  probs <- pmap_bmoe_array(list(wt), function(.wt) softmax(x_wt %*% .wt))
+  mfs <- lapply(object$formula$regr, stats::model.frame, data = new_data)
 
-  pmap_bmoe_array(
-    list(probs = probs),
-    function(probs) {
-      apply(probs, 1, function(.p) sample(all_labels, size = 1, prob = .p))
-    },
-    varname = varname
-  )
+  x_regr_list <- unique(lapply(mfs, stats::model.matrix, data = new_data))
+
+  if (length(x_regr_list) > 1) stop("Regression formulas have different RHS")
+
+  return(x_regr_list[[1]])
 }
 
 

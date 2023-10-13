@@ -176,21 +176,3 @@ get_names_from_bmoe_fit <- function(object) {
       sprintf("k = %i", seq_len(object$prior$k))
   )
 }
-
-
-#' Get Regression Design Matrix (`x_regr`)
-#'
-#' Helper to access `x_regr` and verify a common RHS to regression formulas.
-#'
-#' @inheritParams bmoe-package
-#'
-#' @export
-get_x_regr_from_bmoe_fit <- function(object, data) {
-  mfs <- lapply(object$formula$regr, stats::model.frame, data = data)
-
-  x_regr_list <- unique(lapply(mfs, stats::model.matrix, data = data))
-
-  if (length(x_regr_list) > 1) stop("Regression formulas have different RHS")
-
-  return(x_regr_list[[1]])
-}

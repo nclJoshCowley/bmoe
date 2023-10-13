@@ -83,6 +83,7 @@ tidy.bmoe_array <- function(x, ..., .dimnames = NULL) {
 
   names(dim(x)) <- gsub("^iteration$", ".iter", names(dim(x)))
   names(dim(x)) <- gsub("^chain$", ".chain", names(dim(x)))
+  names(dim(x))[is.na(names(dim(x)))] <- ""
 
   if (!is.null(.dimnames)) {
     stopifnot("Bad dimension names" = length(.dimnames) == length(dim(x)) - 2)
@@ -117,6 +118,7 @@ tidy.bmoe_array <- function(x, ..., .dimnames = NULL) {
 #' @param .l list of `bmoe_array`. Only MCMC inputs should be placed here.
 #' @param .f function. To be applied over each draws.
 #' @param ... Deterministic arguments. Same value are passed to `.f` each time.
+#' @inheritParams bmoe_array
 #'
 #' @returns A newly generated MCMC quantity, stored as a `bmoe_array`.
 #'

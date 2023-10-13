@@ -5,7 +5,7 @@
 \alias{autoplot.bmoe_fit}
 \title{MoE Patchwork Objects}
 \usage{
-\method{autoplot}{bmoe_fit}(object, varname, type = "none", ..., data)
+\method{autoplot}{bmoe_fit}(object, varname, type = "none", ..., new_data)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
@@ -22,7 +22,7 @@
 
 \item{...}{Extra arguments silently ignored.}
 
-\item{data}{Passed to \link{extract_log_lik}, ignored otherwise.}
+\item{new_data}{Passed to \link{extract_log_lik}, ignored otherwise.}
 }
 \description{
 Creates a \code{\link[patchwork:patchwork-package]{patchwork}} of \code{ggplot2} objects
