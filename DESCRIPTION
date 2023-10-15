@@ -23,7 +23,6 @@ Imports:
     knitrProgressBar,
     generics,
     ggplot2,
-    MASS,
     patchwork,
     purrr,
     rlang,

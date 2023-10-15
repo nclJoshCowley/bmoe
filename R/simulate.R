@@ -144,12 +144,10 @@ artificial_Surv <- function(x, q_cens) {
 #'
 #' @keywords internal
 simulate_x <- function(n_s, n_x, .scale = TRUE) {
-  out <- MASS::mvrnorm(n = n_s, mu = rep(0, n_x), Sigma = diag(1, nrow = n_x))
+  out <- matrix(stats::rnorm(n_s * n_x), nrow = n_s, ncol = n_x)
 
   if (isTRUE(.scale)) {
-    out <- scale(out)
-    attr(out, "scaled:center") <- NULL
-    attr(out, "scaled:scale") <- NULL
+    out <- structure(scale(out), "scaled:scale" = NULL, "scaled:center" = NULL)
   }
 
   tibble::as_tibble(out, .name_repair = \(.x) sprintf("x%02i", seq_along(.x)))
