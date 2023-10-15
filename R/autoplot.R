@@ -6,7 +6,7 @@
 #' @inheritParams bmoe-package
 #' @param varname character. Variable name defined in the model.
 #' @inheritParams get_mcmc_layer
-#' @param new_data Passed to [extract_log_lik], ignored otherwise.
+#' @param new_data Passed to [extract_log_lik]; ignored otherwise.
 #' @param ... Extra arguments silently ignored.
 #'
 #' @name bmoe-plot
@@ -20,7 +20,9 @@ autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
     names(type) <- gsub("^Acf$", "ACF", tools::toTitleCase(type))
 
     out <- lapply(type, function(.type) {
-      autoplot(object, varname, .type, data = rlang::maybe_missing(new_data))
+      autoplot(
+        object, varname, .type, new_data = rlang::maybe_missing(new_data)
+      )
     })
 
     is_split_by_y_nms <- varname %in% c("regr", "log_lik")
