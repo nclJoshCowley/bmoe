@@ -1,0 +1,151 @@
+---
+title: "Memoisation of Component Allocation Draws"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{component-memoisation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup}
+#| include: false
+library(bmoe)
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+```
+
+## Purpose
+
+Explains the reason for [memoisation](https://memoise.r-lib.org/) within key
+    functionality and nuance that should be understood by the users of this
+    package.
+
+
+## Motivation
+
+Suppose we fit a Bayesian Mixture of Experts analysis.
+
+```{.r}
+object <- example_bmoe_fit(multiple_y = TRUE)
+new_data <- object$new_data[1:4, ]
+```
+
+And with the `new_data`, defined above, we want to 
+
+1. calculate the OOS log likelihood per observation;
+
+1. make predictions based on the predictors in the new data.
+
+The functionality to achieve these objects are isolated in
+
+1. `bmoe::extract_pointwise_log_lik()`;
+
+1. `bmoe:::predict.bmoe_fit()` (callable by `stats::predict`).
+
+Both of these functions use
+
+```{.r}
+z <- calculate_component_samples(object, new_data)
+```
+
+to draw new samples from the posterior distribution.
+
+While the distribution will be the same when all inputs are the same, the
+    samples may be slightly different due to the randomness of the quantity.
+    
+Hence, we memoise the function to extract samples so the draws denoting the
+    component allocations remain unchanged unless the `object` or `new_data`
+    are changed.
+
+To see this, consider the following cleaned output from the R console.
+
+```{.r}
+memoise::is.memoised(calculate_component_samples)
+#> [1] TRUE
+
+
+system.time({
+  z <- calculate_component_samples(object, new_data)
+  print(z)
+})
+#> [MESSAGE]: Drawing new allocation samples from relevant distribution
+#>
+#> Output summarised over 10000 iterations and 2 chains:
+#> 
+#> varname = 'z'
+#> 
+#> [1] 2.08050 2.00210 2.17815 1.83230
+#>    user  system elapsed 
+#>    5.59    0.16    5.73
+
+
+system.time({
+  z <- calculate_component_samples(object, new_data)
+  print(z)
+})
+#> Output summarised over 10000 iterations and 2 chains:
+#> 
+#> varname = 'z'
+#> 
+#> [1] 2.08050 2.00210 2.17815 1.83230
+#>    user  system elapsed 
+#>    0.02    0.00    0.02
+
+
+system.time({
+  z <- calculate_component_samples(object, new_data[1:2, ])
+  print(z)
+})
+#> [MESSAGE]: Drawing new allocation samples from relevant distribution
+#>
+#> Output summarised over 10000 iterations and 2 chains:
+#>
+#> varname = 'z'
+#> 
+#> [1] 2.0798 1.9923
+#>    user  system elapsed 
+#>    5.02    0.12    5.13
+```
+
+```{r}
+#| include: false
+if (interactive()) {
+  object <- example_bmoe_fit(multiple_y = TRUE)
+  new_data <- object$new_data[1:4, ]
+
+  # Source code for above 'stored' output
+  memoise::is.memoised(calculate_component_samples)
+  
+  system.time({
+    z <- calculate_component_samples(object, new_data)
+    print(z)
+  })
+  
+  system.time({
+    z <- calculate_component_samples(object, new_data)
+    print(z)
+  })
+  
+  system.time({
+    z <- calculate_component_samples(object, new_data[1:2, ])
+    print(z)
+  })
+}
+```
+
+
+We observe that the second attempt to draw `z` from the new data is returned
+    almost immediately, with the same values.
+Whereas modifying the inputs forces the cache to be invalid and new draws are
+    produced.
+    
+## Conclusion
+
+Using the same `object` and `new_data` in the pointwise log likelihood
+    function and prediction function will use the same component allocation
+    samples.
+
+Note that this functionality will not persist across R sessions and so a
+    message is produced when `calculate_component_samples` samples new draws
+    from the posterior.
