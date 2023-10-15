@@ -14,6 +14,16 @@
 #'
 #' @export
 predict.bmoe_fit <- function(object, ..., new_data, type, summarise = TRUE) {
+  if (length(type) > 1) {
+    return(dplyr::bind_cols(
+      lapply(type, function(.type) {
+        predict.bmoe_fit(
+          object, new_data = new_data, type = .type, summarise = summarise
+        )
+      })
+    ))
+  }
+
   type <- match.arg(type, c("response", "raw", "class"))
   y_keys <- sprintf(".pred_%s", get_names_from_bmoe_fit(object)$y)
 
