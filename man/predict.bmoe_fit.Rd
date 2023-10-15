@@ -4,7 +4,7 @@
 \alias{predict.bmoe_fit}
 \title{Prediction for Bayesian Mixture of Expert Fits}
 \usage{
-\method{predict}{bmoe_fit}(object, ..., new_data, type)
+\method{predict}{bmoe_fit}(object, ..., new_data, type, summarise = TRUE)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
@@ -14,13 +14,15 @@
 \item{new_data}{data frame. Data used to create a design matrices.
 Setting \code{new_data = NULL} utilises the trained model (special case).}
 
-\item{type}{choice. Determines output type}
+\item{type}{choice. Determines output type.}
+
+\item{summarise}{logical. When \code{TRUE}, any list column output is summarised.}
 }
 \value{
 \itemize{
-\item \code{type = "numeric"}. Tibble output with 1 MCMC list column per response.
-\item \code{type = raw}. A \code{\link{bmoe_array}} MCMC object is returned.
-\item \code{type = class}. The component membership, \code{z}, is returned.
+\item \code{type = "response"}. Tibble output with a list column per response.
+\item \code{type = "class"}. Component membership, \code{z}, is returned as a list column.
+\item \code{type = "raw"}. A \code{\link{bmoe_array}} MCMC object is returned.
 }
 }
 \description{
