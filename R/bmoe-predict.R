@@ -116,8 +116,8 @@ summarise_bare_draws <- function(is_nominal) {
       dplyr::summarise(
         dplyr::group_by(.draws, .data$.chain),
         mean = mean(.data$.value),
-        upper = stats::quantile(.data$.value, probs = c(0.975)),
-        lower = stats::quantile(.data$.value, probs = c(0.025))
+        lower = stats::quantile(.data$.value, probs = c(0.025)),
+        upper = stats::quantile(.data$.value, probs = c(0.975))
       )
     }
   }
