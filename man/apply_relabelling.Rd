@@ -26,7 +26,7 @@ switching.
 }
 \section{Functions}{
 \itemize{
-\item \code{table_permutations()}: Calculate summary of a \code{permutations} object.#'
+\item \code{table_permutations()}: Calculate summary of a \code{permutations} object.
 
 }}
 \section{Permutations}{

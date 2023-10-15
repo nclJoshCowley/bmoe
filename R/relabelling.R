@@ -162,7 +162,7 @@ boys_henderson_2002 <- function(z, start = 2, z_max = max(z)) {
 }
 
 
-#' @describeIn apply_relabelling Calculate summary of a `permutations` object.#'
+#' @describeIn apply_relabelling Calculate summary of a `permutations` object.
 #' @export
 table_permutations <- function(permutations) {
   out <-
