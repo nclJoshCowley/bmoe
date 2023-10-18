@@ -30,7 +30,10 @@ simulate_bmoe <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
 
   stopifnot("Bad dimensions for 'wt'" = dim(wt) == c(n_x + 1, n_k))
 
-  if (length(prec) == 1) prec <- rep(prec, n_k)
+  if (is.null(dim(prec))) {
+    if (length(prec) == 1) prec <- rep(prec, n_k)
+    if (length(prec) == n_k) prec <- matrix(prec, n_y, n_k, byrow = TRUE)
+  }
 
   x_data <- simulate_x(n_s, n_x)
   x <- as.matrix(cbind(Intercept = 1, x_data))
