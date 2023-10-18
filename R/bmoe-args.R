@@ -72,7 +72,7 @@ bmoe_jags_n <- function(...) {
 #'
 #' @export
 bmoe_inits <- function(seed_base, .RNG.name = "base::Wichmann-Hill", ...) {
-  dots <- rlang::list2(...)
+  dots <- rlang::enexprs(...)
 
   rlang::new_function(
     args = rlang::pairlist2(chain = ),
