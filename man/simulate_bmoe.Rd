@@ -17,7 +17,7 @@ simulate_bmoe(n_s, regr, wt, prec, n_loo, q_cens = NULL)
 
 \item{multiple_y}{logical. When \code{TRUE}, example defaults to multiple \code{y}.}
 
-\item{n_s}{integer. Number of observations.}
+\item{n_s}{integer. Total number of simulated observations.}
 
 \item{regr}{array. Regression coefficients.}
 
@@ -25,7 +25,7 @@ simulate_bmoe(n_s, regr, wt, prec, n_loo, q_cens = NULL)
 
 \item{prec}{numeric. Precision parameter per component.}
 
-\item{n_loo}{integer. Number of observations to be split into a test set.}
+\item{n_loo}{integer. Number of observations to be moved into a test set.}
 
 \item{q_cens}{numeric [0, 1]. Optional artificial left-censoring level.}
 }
@@ -42,6 +42,7 @@ also asserts \code{n_x}, \code{n_y} and \code{n_k}.
 \item Component membership is simulated per observation, not per response
 variable. Hence, \code{dim(wt) = c(n_x + 1, n_k)}.
 \item The simulated \code{x} matrix is used for both regression and weighting.
+\item Only \code{n_s - n_loo} of the total observations will be kept in \verb{$data}.
 }
 }
 \section{Functions}{

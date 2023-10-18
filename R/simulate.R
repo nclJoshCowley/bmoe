@@ -8,13 +8,15 @@
 #' * Component membership is simulated per observation, not per response
 #'   variable. Hence, `dim(wt) = c(n_x + 1, n_k)`.
 #' * The simulated `x` matrix is used for both regression and weighting.
+#' * Only `n_s - n_loo` of the total observations will be kept in `$data`.
 #'
-#' @param n_s integer. Number of observations.
+#' @param n_s integer. Total number of simulated observations.
 #' @param regr array. Regression coefficients.
 #' @param wt matrix. Weighting coefficients.
 #' @param prec numeric. Precision parameter per component.
-#' @param n_loo integer. Number of observations to be split into a test set.
+#' @param n_loo integer. Number of observations to be moved into a test set.
 #' @param q_cens numeric \[0, 1\]. Optional artificial left-censoring level.
+#'
 #'
 #' @returns List with class `bmoe_sim`.
 #'
