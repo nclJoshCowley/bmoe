@@ -94,6 +94,7 @@ bmoe_array_to_pred_tb <- function(x, .key) {
 #' @keywords internal
 #' @noRd
 bmoe_array_to_pred_tb_summary <- function(x, .key) {
+  # TODO: Could be more efficient to summarise raw array instead of nested structure?
   pred_tb <- bmoe_array_to_pred_tb(x, .key)
   is_nominal <- identical(.key, ".pred_class")
 
