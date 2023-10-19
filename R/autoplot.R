@@ -168,7 +168,7 @@ layer_density <- function(.truth = FALSE) {
 
 #' @rdname mcmc_layer
 #' @keywords internal
-layer_trace <- function(.truth) {
+layer_trace <- function(.truth = FALSE) {
   cur_scale <- scale_x_iterations()
 
   cur_labs <- ggplot2::labs(x = "Iteration", y = "Value", colour = "Chain")

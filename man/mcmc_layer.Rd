@@ -11,7 +11,7 @@ mcmc_layer(type, .truth = FALSE)
 
 layer_density(.truth = FALSE)
 
-layer_trace(.truth)
+layer_trace(.truth = FALSE)
 
 layer_acf()
 }
