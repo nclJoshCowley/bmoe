@@ -6,7 +6,7 @@
 #' @inheritParams bmoe-package
 #' @param varname character. Variable name defined in the model.
 #' @inheritParams get_mcmc_layer
-#' @param new_data Passed to [extract_log_lik]; ignored otherwise.
+#' @param new_data Passed to [calculate_log_lik]; ignored otherwise.
 #' @param ... Extra arguments silently ignored.
 #'
 #' @name bmoe-plot
@@ -51,6 +51,8 @@ autoplot_regr <- function(object) {
   n_x <- length(nms$x)
 
   regr_draws <- tidy(object$output$regr, .dimnames = c("x", "y", "k"))
+
+  object$params$regr <- tibble::enframe(object$params$regr)
 
   regr_draws_per_y <-
     split(regr_draws, factor(regr_draws$y, labels = nms$y))
@@ -123,7 +125,7 @@ autoplot_prec <- function(object) {
 #' @inheritParams bmoe-plot
 #' @keywords internal
 autoplot_log_lik <- function(object, new_data) {
-  log_liks <- extract_log_lik(object, new_data)
+  log_liks <- calculate_log_lik(object, new_data)
 
   purrr::imap(log_liks, function(.x, .nm) {
     ggplot2::ggplot(tidy(.x)) +

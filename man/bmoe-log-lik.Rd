@@ -2,13 +2,13 @@
 % Please edit documentation in R/log-likelihood.R
 \name{bmoe-log-lik}
 \alias{bmoe-log-lik}
-\alias{extract_pointwise_log_lik}
-\alias{extract_log_lik}
+\alias{calculate_pointwise_log_lik}
+\alias{calculate_log_lik}
 \title{Extract Pointwise Log Likelihood}
 \usage{
-extract_pointwise_log_lik(object, new_data)
+calculate_pointwise_log_lik(object, new_data)
 
-extract_log_lik(object, new_data)
+calculate_log_lik(object, new_data)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}

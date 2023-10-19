@@ -8,7 +8,7 @@
 #'
 #' @name bmoe-log-lik
 #' @export
-extract_pointwise_log_lik <- function(object, new_data) {
+calculate_pointwise_log_lik <- function(object, new_data) {
   cur_data <- if (is.null(new_data)) object$data else new_data
 
   mfs <- lapply(object$formula$regr, stats::model.frame, data = cur_data)
@@ -35,9 +35,9 @@ extract_pointwise_log_lik <- function(object, new_data) {
 
 #' @rdname bmoe-log-lik
 #' @export
-extract_log_lik <- function(object, new_data) {
+calculate_log_lik <- function(object, new_data) {
   lapply(
-    extract_pointwise_log_lik(object, new_data),
+    calculate_pointwise_log_lik(object, new_data),
     function(.x) {
       structure(
         apply(.x, 1:2, sum),

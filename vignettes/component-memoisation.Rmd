@@ -39,7 +39,7 @@ And with the `new_data`, defined above, we want to
 
 The functionality to achieve these objects are isolated in
 
-1. `bmoe::extract_pointwise_log_lik()`;
+1. `bmoe::calculate_pointwise_log_lik()`;
 
 1. `bmoe:::predict.bmoe_fit()` (callable by `stats::predict`).
 
