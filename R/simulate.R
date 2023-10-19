@@ -71,6 +71,7 @@ simulate_bmoe <- function(n_s, regr, wt, prec, n_loo, q_cens = NULL) {
 
   if (!is.null(q_cens)) {
     requireNamespace("survival", quietly = TRUE)
+    out$params$q_cens <- q_cens
     out$params$y_uncens <- out$data[colnames(y_data)]
 
     out$data <-
