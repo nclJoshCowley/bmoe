@@ -27,5 +27,5 @@ Alternatively one can pass a \strong{list} of custom layers to be added.
 }
 \description{
 Creates a \code{\link[patchwork:patchwork-package]{patchwork}} of \code{ggplot2} objects
-with partitioned data, requires the user to add \link[=get_mcmc_layer]{layers}.
+with partitioned data, requires the user to add \link[=mcmc_layer]{layers}.
 }
