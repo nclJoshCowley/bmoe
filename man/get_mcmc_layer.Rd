@@ -25,6 +25,7 @@ layer_acf()
 \item \code{"density"}, useful distribution visualisation.
 \item \code{"trace"}, useful for verifying chain convergence.
 \item \code{"acf"}, autocorrelation of the MCMC samples at discrete lags.
+Alternatively one can pass a \strong{list} of custom layers to be added.
 }}
 }
 \description{

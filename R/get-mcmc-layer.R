@@ -5,6 +5,7 @@
 #' * `"density"`, useful distribution visualisation.
 #' * `"trace"`, useful for verifying chain convergence.
 #' * `"acf"`, autocorrelation of the MCMC samples at discrete lags.
+#' Alternatively one can pass a **list** of custom layers to be added.
 #'
 #' @name get_mcmc_layer
 NULL
@@ -13,6 +14,8 @@ NULL
 #' @rdname get_mcmc_layer
 #' @export
 get_mcmc_layer <- function(type = "none") {
+  if (is.list(type) || inherits(type, "Layer")) return(type)
+
   switch(
     match.arg(type, c("none", "density", "trace", "acf")),
     none = list(),
