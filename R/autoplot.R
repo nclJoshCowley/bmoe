@@ -13,12 +13,13 @@
 #'
 #' @export
 autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
-  if (length(type) > 1) {
-    names(type) <- gsub("^Acf$", "ACF", tools::toTitleCase(type))
+  if (is.character(type) && length(type) > 1) {
+    new_data <- rlang::maybe_missing(new_data)
 
-    out <- lapply(type, function(.type) autoplot(
-      object, varname, .type, new_data = rlang::maybe_missing(new_data)
-    ))
+    out <-
+      type |>
+      rlang::set_names(gsub("^Acf$", "ACF", tools::toTitleCase(type))) |>
+      lapply(function(.x) autoplot(object, varname, .x, new_data = new_data))
 
     if (varname %in% c("regr", "log_lik")) return(purrr::list_transpose(out))
     return(out)
