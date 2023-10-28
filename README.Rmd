@@ -1,0 +1,99 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+## Purpose
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+This repository contains an R package with a focus on Mixture of Experts (MoE)
+    applied to Bayesian linear and censored regression.
+
+
+
+## Installation
+
+You can install the development version of `bmoe` from [GitHub](https://github.com/) with:
+
+```{.r}
+devtools::install_github("nclJoshCowley/bmoe", auth_token = ...)
+```
+
+
+
+## Model Description
+
+TODO: Include model description here.
+
+
+
+## Worked Example
+
+### Simulation
+
+We can simulate data from these models using `bmoe::simulate_bmoe()`.
+
+Alternatively, one can use the example wrapper to utilise default arguments.
+
+```{r}
+example_sim <- bmoe::example_simulate_bmoe()
+
+example_sim$data
+```
+
+### Fitting
+
+We require prior hyperparameters for all models; the default is a vague prior
+for each parameter but the number of components ($K$) is assumed known and must
+be set by the user.
+
+```{r}
+example_prior <- bmoe::bmoe_prior(k = 3)
+
+example_prior
+```
+
+For simulation study results, one can pass a simulation directly.
+
+```{.r}
+bmoe::bmoe(example_sim, prior = example_prior)
+```
+
+More generally, this package provides a formula-data interface.
+
+```{.r}
+example_fit <-
+  bmoe::bmoe(
+    y01 ~ x01 + x02 + x03,
+    data = example_sim$data,
+    prior = example_prior
+  )
+```
+
+### Reporting
+
+Analysis reports can be generated from any fitted object and desired filename.
+
+```{.r}
+bmoe::render_bmoe_fit(example_fit, "report-name")
+```
+
+
+
+## Future Work
+
+Extend this `README` with more functionality including relabelling, prediction
+and log likelihood.
