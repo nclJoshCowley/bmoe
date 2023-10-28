@@ -72,7 +72,7 @@ For simulation study results, one can pass a simulation directly.
 bmoe::bmoe(example_sim, prior = example_prior)
 ```
 
-More generally, this package provides a formula-data interface.
+More generally, this package provides a extended formula-data interface.
 
 ```{.r}
 example_fit <-
@@ -82,6 +82,19 @@ example_fit <-
     prior = example_prior
   )
 ```
+
+This interface goes beyond the base R formula system as we can
+
+* model multiple response variables as conditionally independent
+  (conditional on component membership) use the `+` symbol in the LHS.
+  
+* allow two sets of predictors can be separated for regression purposes and
+    component probability weighting purposes using `|`.
+    
+For example, `y01 + y02 ~ x01 + x02 + x03 | x03` implies two response
+    variables, `y01` and `y02`, to be regressed against the linear
+    predictor formed from `x01 + x02 + x03` according to some component
+    probabilities based on the linear predictor formed from `x03`.
 
 ### Reporting
 
