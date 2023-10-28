@@ -1,5 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 
+^\.git$
+
 ^README\.qmd$
 ^README\.Rmd$
