@@ -38,7 +38,6 @@ bmoe.formula <- function(object, data, ..., prior,
   out <- bmoe_yx(y_list, x_regr, x_wt, prior, jags_n, inits)
 
   out$prior <- prior
-  out$inits <- inits
   out$formula <- formula
 
   out$data <- data

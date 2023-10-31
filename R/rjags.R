@@ -30,6 +30,8 @@ complete_jags_fit <- function(file, data, inits, jags_n, varnames) {
       quiet = TRUE
     )
 
+  initial_values <- model$state()
+
   message("\n", "Adaptation stage ...")
 
   jags_adapt <- rjags::adapt
@@ -62,7 +64,13 @@ complete_jags_fit <- function(file, data, inits, jags_n, varnames) {
 
   output <- lapply(output, bmoe_array)
 
-  return(list(data = data, model = model, output = output, jags_n = jags_n))
+  return(list(
+    data = data,
+    model = model,
+    output = output,
+    jags_n = jags_n,
+    inits = initial_values
+  ))
 }
 
 

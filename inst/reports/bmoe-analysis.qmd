@@ -51,6 +51,15 @@ cat("```{.r .cell-code}", object$model$model(), "```", sep = "\n")
 
 
 ::: {.callout-note collapse="true"}
+#### JAGS Controls
+```{r input-jags-n}
+#| results: asis
+cat(sprintf("- `%s = %s`", names(object$jags_n), object$jags_n), sep = "\n\n")
+```
+:::
+
+
+::: {.callout-note collapse="true"}
 #### Prior Information
 ```{r input-prior}
 #| results: asis
@@ -60,14 +69,11 @@ cat(sprintf("- `%s = %s`", names(object$prior), object$prior), sep = "\n\n")
 
 
 ::: {.callout-note collapse="true"}
-#### JAGS Controls
-```{r input-jags-n}
-#| results: asis
-cat(sprintf("- `%s = %s`", names(object$jags_n), object$jags_n), sep = "\n\n")
+#### Initial Values
+```{r input-inits}
+rlang::set_names(object$inits, sprintf("Chain %s", seq_along(object$inits)))
 ```
 :::
-
-
 
 ```{r input-label-switching}
 permutations <- attr(object, "permutations")
