@@ -67,12 +67,6 @@ cat(sprintf("- `%s = %s`", names(object$jags_n), object$jags_n), sep = "\n\n")
 ```
 :::
 
-## Log Likelihood (In-sample)
-
-```{r output-log-lik}
-autoplot(object, "log_lik", c("density", "trace", "acf"), new_data = NULL)
-```
-
 
 
 ```{r input-label-switching}
@@ -113,16 +107,18 @@ autoplot(object, "prec", c("density", "trace", "acf"))
 ```
 :::
 
-## Component Allocations
+```{r output-component-alloc-heading}
+if (object$prior$k > 1) knitr::asis_output("## Component Allocations\n\n")
+```
 
-```{r output-z}
+```{r output-component-alloc}
 #| fig-asp: 0.65
-local({
+if (object$prior$k > 1) {
   chain_selection <- seq_len(dim(object$output$regr)["chain"])
   names(chain_selection) <- sprintf("Chain %s", seq_along(chain_selection))
   
   lapply(chain_selection, function(.chain) {
     component_allocation_visualisation(object, .chain)
   })
-})
+}
 ```
