@@ -1,13 +1,24 @@
-#' @rdname bmoe
+#' Example Bayesian Mixture of Experts Model Fit
 #'
-#' @inheritParams simulate_bmoe
+#' @param ... Either `prior`, `jags_n` `inits` or passed to `simulate_bmoe`.
+#'
+#' @seealso [`bmoe()`].
 #'
 #' @export
-example_bmoe_fit <- function(..., multiple_y = FALSE) {
-  bmoe(
-    example_simulate_bmoe(..., multiple_y = multiple_y),
-    prior = bmoe_prior(k = 3),
-    jags_n = list(n.update = 0, n.adapt = 2000, n.iter = 10000)
+example_bmoe_fit <- function(...) {
+  dots <- rlang::list2(...)
+
+  prior <- dots$prior %||% bmoe_prior(k = 3)
+  jags_n <- dots$jags_n %||% list(n.update = 0, n.adapt = 2e3, n.iter = 1e4)
+  inits <- dots$inits
+
+  simulation_args <- purrr::discard_at(dots, c("prior", "jags_n", "inits"))
+
+  bmoe::bmoe(
+    do.call(example_simulate_bmoe, simulation_args),
+    prior = prior,
+    jags_n = jags_n,
+    inits = inits
   )
 }
 

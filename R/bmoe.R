@@ -12,6 +12,8 @@
 #' @inheritSection bmoe-args Prior
 #' @inheritSection bmoe-args JAGS Controls
 #'
+#' @seealso [`example_bmoe_fit()`].
+#'
 #' @aliases bmoe_fit
 #' @export
 bmoe <- function(object, ..., prior, jags_n = bmoe_jags_n(), inits = NULL) {
