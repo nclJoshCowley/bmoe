@@ -79,7 +79,7 @@ bmoe_array_to_pred_tb <- function(x, .key) {
 
   out <-
     tidy.bmoe_array(x) |>
-    dplyr::group_by(.data$.term) |>
+    dplyr::group_by(.term = factor(.data$.term, unique(.data$.term))) |>
     dplyr::group_nest(.key = .key) |>
     dplyr::select(-".term")
 
