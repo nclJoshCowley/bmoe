@@ -44,9 +44,8 @@ predict.bmoe_fit <- function(object, ..., new_data, type, summarise = TRUE) {
     array(
       stats::rnorm(n = length(y_mean), mean = y_mean, sd = y_sd),
       dim = dim(y_mean)
-    )
-
-  y_pred <- bmoe_array(y_pred, varname = "y_pred")
+    ) |>
+    bmoe_array(varname = "y_pred")
 
   if (type == "response") {
     if (summarise) {
