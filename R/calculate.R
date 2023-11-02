@@ -17,9 +17,14 @@ NULL
 calculate_component_samples <- function(object, new_data) {
   if (is.null(new_data)) return(object$output$z)
 
-  if (object$prior$k > 1) {
-    message("Drawing new allocation samples from relevant distribution")
+  if (object$prior$k == 1) {
+    expected_dims <-
+      c(dim(object$output$z)[c("iteration", "chain")], nrow(new_data))
+
+    return(bmoe::bmoe_array(array(1, dim = expected_dims), varname = "z"))
   }
+
+  message("Drawing new allocation samples from relevant distribution")
 
   wt <- object$output$wt
   x_wt <- stats::model.matrix(object$formula$wt, data = new_data)
