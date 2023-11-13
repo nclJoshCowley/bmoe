@@ -4,12 +4,12 @@
 \alias{d_lcens_norm}
 \title{Likelihood of Left-Censored Normally Distributed Vector}
 \usage{
-d_lcens_norm(x, mean, sd)
+d_lcens_norm(x, mean, sd, log = FALSE)
 }
 \arguments{
 \item{x}{object. Expected to be left-censored \code{Surv}.}
 
-\item{mean, sd}{numeric. Passed to \code{stats::dnorm} or \code{stats::pnorm}.}
+\item{mean, sd, log}{Passed to \code{\link[stats:Normal]{stats::dnorm}} and \code{\link[stats:Normal]{stats::pnorm}}.}
 }
 \description{
 Likelihood of Left-Censored Normally Distributed Vector

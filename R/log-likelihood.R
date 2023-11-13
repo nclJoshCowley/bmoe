@@ -22,8 +22,11 @@ calculate_pointwise_log_lik <- function(object, new_data) {
 
   Map(
     function(y, nm, mean, sd) {
-      calc_log_lik <- function(.mean, .sd) log(d_lcens_norm(y, .mean, .sd))
-      pmap_bmoe_array(list(mean, sd), calc_log_lik, varname = nm)
+      pmap_bmoe_array(
+        list(mean, sd),
+        function(.mean, .sd) d_lcens_norm(y, .mean, .sd, log = TRUE),
+        varname = nm
+      )
     },
     y = y_datalist,
     nm = lapply(names(y_datalist), function(.nm) sprintf("log_lik_%s", .nm)),
@@ -52,19 +55,19 @@ calculate_log_lik <- function(object, new_data) {
 #' Likelihood of Left-Censored Normally Distributed Vector
 #'
 #' @param x object. Expected to be left-censored `Surv`.
-#' @param mean,sd numeric. Passed to `stats::dnorm` or `stats::pnorm`.
+#' @param mean,sd,log Passed to [`stats::dnorm`] and [`stats::pnorm`].
 #'
 #' @note Passing non-`Surv` objects lead to `stats::dnorm(...)`, not an error.
 #'
 #' @keywords internal
-d_lcens_norm <- function(x, mean, sd) {
+d_lcens_norm <- function(x, mean, sd, log = FALSE) {
   if (!inherits(x, "Surv")) return(stats::dnorm(x, mean, sd))
 
   stopifnot("Expected left-censored data" = attr(x, "type") == "left")
 
   ifelse(
     as.logical(x[, "status"]),
-    stats::dnorm(x[, "time"], mean, sd),
-    stats::pnorm(x[, "time"], mean, sd)
+    stats::dnorm(x[, "time"], mean, sd, log = log),
+    stats::pnorm(x[, "time"], mean, sd, log = log)
   )
 }
