@@ -3,7 +3,7 @@
 \name{bmoe-plot}
 \alias{bmoe-plot}
 \alias{autoplot.bmoe_fit}
-\title{MoE Patchwork Objects}
+\title{List of MoE Analysis Plot Objects}
 \usage{
 \method{autoplot}{bmoe_fit}(object, varname, type = "none", ..., new_data)
 }
@@ -26,6 +26,6 @@ Alternatively one can pass a \strong{list} of custom layers to be added.
 \item{new_data}{Passed to \link{calculate_log_lik}; ignored otherwise.}
 }
 \description{
-Creates a \code{\link[patchwork:patchwork-package]{patchwork}} of \code{ggplot2} objects
-with partitioned data, requires the user to add \link[=mcmc_layer]{layers}.
+Creates a nested list of \code{ggplot2} objects with partitioned data, requires
+the user to add \link[=mcmc_layer]{layers}.
 }

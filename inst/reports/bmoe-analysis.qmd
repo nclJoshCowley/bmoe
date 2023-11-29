@@ -97,19 +97,37 @@ if (!is.null(permutations)) {
 ### Regression
 ```{r output-regr}
 #| opts.label: regr
-autoplot(object, "regr", c("density", "trace", "acf"))
+autoplot(object, "regr", c("density", "trace", "acf")) |>
+  purrr::modify_depth(
+    .depth = 2,
+    .f = patchwork::wrap_plots, 
+    guides = "collect",
+    nrow = dim(object$output$regr)[3]
+  )
 ```
 
 ### Weighting
 ```{r output-wt}
 #| opts.label: wt
-autoplot(object, "wt", c("density", "trace", "acf"))
+autoplot(object, "wt", c("density", "trace", "acf")) |> 
+  purrr::modify_depth(
+    .depth = 1,
+    .f = patchwork::wrap_plots, 
+    guides = "collect",
+    nrow = dim(object$output$wt)[3]
+  )
 ```
 
 ### Precision
 ```{r output-prec}
 #| opts.label: prec
-autoplot(object, "prec", c("density", "trace", "acf"))
+autoplot(object, "prec", c("density", "trace", "acf")) |> 
+  purrr::modify_depth(
+    .depth = 1,
+    .f = patchwork::wrap_plots, 
+    guides = "collect",
+    nrow = dim(object$output$prec)[3]
+  )
 ```
 :::
 

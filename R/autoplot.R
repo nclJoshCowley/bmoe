@@ -1,7 +1,7 @@
-#' MoE Patchwork Objects
+#' List of MoE Analysis Plot Objects
 #'
-#' Creates a [`patchwork`][patchwork::patchwork-package] of `ggplot2` objects
-#'   with partitioned data, requires the user to add [layers][mcmc_layer].
+#' Creates a nested list of `ggplot2` objects with partitioned data, requires
+#'   the user to add [layers][mcmc_layer].
 #'
 #' @inheritParams extract_draws
 #' @inheritParams mcmc_layer
@@ -21,7 +21,7 @@ autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
       rlang::set_names(gsub("^Acf$", "ACF", tools::toTitleCase(type))) |>
       lapply(function(.x) autoplot(object, varname, .x, new_data = new_data))
 
-    if (varname %in% c("regr", "log_lik")) return(purrr::list_transpose(out))
+    # if (varname %in% c("regr", "log_lik")) return(purrr::list_transpose(out))
     return(out)
   }
 
@@ -31,77 +31,69 @@ autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
 
   switch(
     varname,
-    regr = lapply(blank_patchwork_regr(object), `&`, cur_layer),
-    wt = blank_patchwork_wt(object) & cur_layer,
-    prec = blank_patchwork_prec(object) & cur_layer,
-    log_lik = lapply(blank_patchwork_log_lik(object, new_data), `&`, cur_layer)
+    regr = make_empty_plotlist_regr(object) |>
+      purrr::modify_depth(2, `&`, cur_layer),
+
+    wt = make_empty_plotlist_wt(object) |>
+      purrr::modify_depth(1, `&`, cur_layer),
+
+    prec = make_empty_plotlist_prec(object) |>
+      purrr::modify_depth(1, `&`, cur_layer),
+
+    log_lik = make_empty_plotlist_log_lik(object, new_data) |>
+      purrr::modify_depth(1, `&`, cur_layer),
   )
 }
 
 
 #' @inheritParams bmoe-plot
 #' @keywords internal
-blank_patchwork_regr <- function(object) {
+make_empty_plotlist_regr <- function(object) {
   regr_draws <- extract_draws(object, "regr")
   regr_draws_per_y <- split(regr_draws, regr_draws$y)
 
-  plotlist_per_y <-
-    lapply(regr_draws_per_y, function(.draws) {
-      .draws |>
-        dplyr::group_by(.data$.term, .data$x, .data$k) |>
-        dplyr::group_map(.keep = TRUE, function(.x, .key) {
-          ggplot2::ggplot(.x) +
-            ggplot2::labs(subtitle = sprintf("%s, %s", .key$x, .key$k))
-        })
-    })
-
-  n_x <- dim(object$output$regr)[3]
-
-  lapply(plotlist_per_y, patchwork::wrap_plots, nrow = n_x, guides = "collect")
+  lapply(regr_draws_per_y, function(.draws) {
+    .draws |>
+      dplyr::group_by(.data$.term, .data$x, .data$k) |>
+      dplyr::group_map(.keep = TRUE, function(.x, .key) {
+        ggplot2::ggplot(.x) +
+          ggplot2::labs(subtitle = sprintf("%s, %s", .key$x, .key$k))
+      })
+  })
 }
 
 
 #' @inheritParams bmoe-plot
 #' @keywords internal
-blank_patchwork_wt <- function(object) {
+make_empty_plotlist_wt <- function(object) {
   wt_draws <- extract_draws(object, "wt")
 
-  plotlist <-
-    wt_draws |>
+  wt_draws |>
     dplyr::group_by(.data$.term, .data$x, .data$k) |>
     dplyr::group_map(.keep = TRUE, function(.x, .key) {
       ggplot2::ggplot(.x) +
         ggplot2::labs(subtitle = sprintf("%s, %s", .key$x, .key$k))
     })
-
-  n_x <- dim(object$output$wt)[3]
-
-  patchwork::wrap_plots(plotlist, nrow = n_x, guides = "collect")
 }
 
 
 #' @inheritParams bmoe-plot
 #' @keywords internal
-blank_patchwork_prec <- function(object) {
+make_empty_plotlist_prec <- function(object) {
   prec_draws <- extract_draws(object, "prec")
 
-  plotlist <-
-    prec_draws |>
+  prec_draws |>
     dplyr::group_by(.data$.term, .data$y, .data$k) |>
     dplyr::group_map(.keep = TRUE, function(.x, .key) {
       ggplot2::ggplot(.x) +
         ggplot2::labs(subtitle = sprintf("%s, %s", .key$y, .key$k))
     })
-
-  n_y <- dim(object$output$prec)[3]
-
-  patchwork::wrap_plots(plotlist, nrow = n_y, guides = "collect")
 }
 
 
 #' @inheritParams bmoe-plot
 #' @keywords internal
-blank_patchwork_log_lik <- function(object, new_data) {
+make_empty_plotlist_log_lik <- function(object, new_data) {
   log_liks <- calculate_log_lik(object, new_data)
 
   purrr::imap(log_liks, function(.x, .nm) {
