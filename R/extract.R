@@ -4,6 +4,12 @@
 #' @param varname character. Variable name defined in the model.
 #' @inheritParams rlang::args_dots_empty
 #'
+#' @section Simulation Study:
+#' For models fit to a `bmoe_sim` object, a `$.truth` column may also be added.
+#'
+#' This functionality is conditional on the assumed \eqn{K} in `prior` being
+#'   the same as the \eqn{K} used to simulate the data.
+#'
 #' @export
 extract_draws <- function(object, varname, ...) {
   UseMethod("extract_draws")
@@ -44,6 +50,9 @@ extract_draws.bmoe_fit <- function(object, varname, ...) {
 #' @export
 extract_draws.bmoe_simstudy <- function(object, varname, ...) {
   out <- NextMethod()
+
+  # No truth when assumed K is different to K used in simulation
+  if (dim(object$params$regr)[3] != object$prior$k) return(out)
 
   vardim <- utils::tail(unname(dim(object$output[[varname]])), -2)
 

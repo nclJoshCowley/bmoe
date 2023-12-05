@@ -22,3 +22,11 @@ extract_draws(object, varname, ...)
 \description{
 Extract Posterior Samples from Bayesian Mixture of Experts
 }
+\section{Simulation Study}{
+
+For models fit to a \code{bmoe_sim} object, a \verb{$.truth} column may also be added.
+
+This functionality is conditional on the assumed \eqn{K} in \code{prior} being
+the same as the \eqn{K} used to simulate the data.
+}
+
