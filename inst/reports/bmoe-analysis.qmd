@@ -18,7 +18,7 @@ library(patchwork)
 is_child <- exists("object")
 
 if (!(is_child)) {
-  object <- 
+  object <-
     if (params$object$tag == "!expr") {
       eval(parse(text = params$object$value))
     } else {
@@ -100,7 +100,7 @@ if (!is.null(permutations)) {
 autoplot(object, "regr", c("density", "trace", "acf")) |>
   purrr::modify_depth(
     .depth = 2,
-    .f = patchwork::wrap_plots, 
+    .f = patchwork::wrap_plots,
     guides = "collect",
     nrow = dim(object$output$regr)[3]
   )
@@ -109,10 +109,10 @@ autoplot(object, "regr", c("density", "trace", "acf")) |>
 ### Weighting
 ```{r output-wt}
 #| opts.label: wt
-autoplot(object, "wt", c("density", "trace", "acf")) |> 
+autoplot(object, "wt", c("density", "trace", "acf")) |>
   purrr::modify_depth(
     .depth = 1,
-    .f = patchwork::wrap_plots, 
+    .f = patchwork::wrap_plots,
     guides = "collect",
     nrow = dim(object$output$wt)[3]
   )
@@ -121,10 +121,10 @@ autoplot(object, "wt", c("density", "trace", "acf")) |>
 ### Precision
 ```{r output-prec}
 #| opts.label: prec
-autoplot(object, "prec", c("density", "trace", "acf")) |> 
+autoplot(object, "prec", c("density", "trace", "acf")) |>
   purrr::modify_depth(
     .depth = 1,
-    .f = patchwork::wrap_plots, 
+    .f = patchwork::wrap_plots,
     guides = "collect",
     nrow = dim(object$output$prec)[3]
   )
@@ -140,7 +140,7 @@ if (object$prior$k > 1) knitr::asis_output("## Component Allocations\n\n")
 if (object$prior$k > 1) {
   chain_selection <- seq_len(dim(object$output$regr)["chain"])
   names(chain_selection) <- sprintf("Chain %s", seq_along(chain_selection))
-  
+
   lapply(chain_selection, function(.chain) {
     component_allocation_visualisation(object, .chain)
   })

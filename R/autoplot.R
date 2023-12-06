@@ -21,12 +21,14 @@ autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
       rlang::set_names(gsub("^Acf$", "ACF", tools::toTitleCase(type))) |>
       lapply(function(.x) autoplot(object, varname, .x, new_data = new_data))
 
-    # if (varname %in% c("regr", "log_lik")) return(purrr::list_transpose(out))
     return(out)
   }
 
+  is_fit_k_correct <- dim(object$params$regr)[3] != object$prior$k
+  is_truth_shown <- inherits(object, "bmoe_simstudy") && is_fit_k_correct
+
   rlang::check_dots_empty()
-  cur_layer <- mcmc_layer(type, .truth = inherits(object, "bmoe_simstudy"))
+  cur_layer <- mcmc_layer(type, .truth = is_truth_shown)
   varname <- match.arg(varname, c(names(object$output), "log_lik"))
 
   switch(
