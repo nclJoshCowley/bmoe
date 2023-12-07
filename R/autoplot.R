@@ -23,13 +23,16 @@ autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
 
     return(out)
   }
-
-  is_fit_k_correct <- dim(object$params$regr)[3] != object$prior$k
-  is_truth_shown <- inherits(object, "bmoe_simstudy") && is_fit_k_correct
-
   rlang::check_dots_empty()
-  cur_layer <- mcmc_layer(type, .truth = is_truth_shown)
   varname <- match.arg(varname, c(names(object$output), "log_lik"))
+
+  is_fit_k_correct <- dim(object$params$regr)[3] == object$prior$k
+  is_truth_shown <-
+    inherits(object, "bmoe_simstudy") &&
+    is_fit_k_correct &&
+    (varname != "log_lik")
+
+  cur_layer <- mcmc_layer(type, .truth = is_truth_shown)
 
   switch(
     varname,

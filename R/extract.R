@@ -51,7 +51,7 @@ extract_draws.bmoe_fit <- function(object, varname, ...) {
 extract_draws.bmoe_simstudy <- function(object, varname, ...) {
   out <- NextMethod()
 
-  is_fit_k_correct <- dim(object$params$regr)[3] != object$prior$k
+  is_fit_k_correct <- dim(object$params$regr)[3] == object$prior$k
   if (!is_fit_k_correct) return(out)
 
   vardim <- utils::tail(unname(dim(object$output[[varname]])), -2)
