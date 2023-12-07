@@ -90,6 +90,16 @@ if (!is.null(permutations)) {
 ```
 
 
+```{r output-log-lik-heading}
+if (!is_child) knitr::asis_output("## Log Likelihood\n\n")
+```
+
+```{r output-log-lik}
+if (!is_child) {
+  autoplot(object, "log_lik", c("density", "trace"), new_data = NULL)
+}
+```
+
 
 ## Parameters
 
