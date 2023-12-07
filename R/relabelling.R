@@ -55,7 +55,7 @@ apply_relabelling.bmoe_fit <- function(object, permutations = NULL) {
 
       # Permute weighting matrix
       object$output$wt[ii, ic, , ] <-
-        object$output$wt[ii, ic, , ][, order(cur_perm)]
+        object$output$wt[ii, ic, , order(cur_perm)]
 
       # Re-implement corner constraint
       object$output$wt[ii, ic, , ] <-
@@ -63,11 +63,11 @@ apply_relabelling.bmoe_fit <- function(object, permutations = NULL) {
 
       # Permute regression matrix
       object$output$regr[ii, ic, , ,] <-
-        object$output$regr[ii, ic, , ,][, , order(cur_perm)]
+        object$output$regr[ii, ic, , , order(cur_perm)]
 
       # Permute precision parameter
       object$output$prec[ii, ic, , ] <-
-        object$output$prec[ii, ic, , ][, order(cur_perm)]
+        object$output$prec[ii, ic, , order(cur_perm)]
     }
   }
 
