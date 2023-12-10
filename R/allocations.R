@@ -22,10 +22,8 @@ NULL
 visualise_allocations_with_response_data <- function(object, .chain, .rank_by) {
   .rank_by <- rlang::enexpr(.rank_by)
 
-  quantile_plotlist <-
-    object$formula$regr |>
-    lapply(function(.formula) .formula[[2]]) |>
-    lapply(function(.y) visualise_response_data(object, {{.y}}, {{.rank_by}}))
+  quantile_plot <-
+    visualise_response_data(object, {{.rank_by}}, {{.rank_by}})
 
   allocation_plot <-
     visualise_allocation_data(object, .chain)
@@ -33,17 +31,15 @@ visualise_allocations_with_response_data <- function(object, .chain, .rank_by) {
   allocation_plot$data <-
     dplyr::left_join(
       allocation_plot$data,
-      quantile_plotlist[[1]]$data[c(".index", ".rank")],
+      quantile_plot$data[c(".index", ".rank")],
       by = ".index"
     )
 
   allocation_plot$mapping$y <- quote(.data$.rank)
-  allocation_plot$labels$y <- quantile_plotlist[[1]]$labels$y
+  allocation_plot$labels$y <- quantile_plot$labels$y
 
   patchwork::wrap_plots(
-    c(list(allocation_plot), quantile_plotlist),
-    nrow = 1,
-    guides = "collect"
+    allocation_plot, quantile_plot, nrow = 1, guides = "collect"
   )
 }
 
@@ -79,7 +75,7 @@ visualise_allocation_data <- function(object, .chain) {
       position = ggplot2::position_fill(vjust = 0.5)
     ) +
     ggplot2::scale_fill_discrete(name = NULL, drop = FALSE) +
-    ggplot2::labs(y = "Index", x = NULL)
+    ggplot2::labs(y = "Index", x = "Allocation Probabilities")
 }
 
 
