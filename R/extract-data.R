@@ -45,7 +45,7 @@ extract_x_wt <- function(object, new_data) {
 
 #' @rdname bmoe-extract-data
 #'
-#' @returns `extract_y()` returns a matrix with one column per `y` variable.
+#' @returns `extract_y()` returns a list of vectors, one per `y` variable.
 #'
 #' @export
 extract_y <- function(object, new_data) {
@@ -54,5 +54,9 @@ extract_y <- function(object, new_data) {
   mfs <- lapply(object$formula$regr, stats::model.frame, data = new_data)
   y_list <- lapply(mfs, stats::model.response)
 
-  return(do.call(cbind, y_list))
+  if (any(vapply(y_list, survival::is.Surv, logical(1)))) {
+    requireNamespace("survival", quietly = TRUE)
+  }
+
+  return(y_list)
 }

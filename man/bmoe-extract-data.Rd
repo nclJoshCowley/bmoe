@@ -22,7 +22,7 @@ Similar structure to original \code{data} argument.
 Setting \code{new_data = NULL} signals for the observed data to be used.}
 }
 \value{
-\code{extract_y()} returns a matrix with one column per \code{y} variable.
+\code{extract_y()} returns a list of vectors, one per \code{y} variable.
 }
 \description{
 Getter functions for the data used in a \code{bmoe} model fit.
