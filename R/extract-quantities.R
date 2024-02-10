@@ -28,11 +28,15 @@ extract_y_posterior_mean <- function(object, new_data) {
 
   x_regr <- extract_x_regr(object, new_data)
 
+  # Interim variable used in subsequent loop
+  cur_y_mean <- array(NA, dim = c(n_s_new, n_y, n_k))
+
   pmap_bmoe_array(
     .l = list(.regr = object$output$regr),
     .f = function(.regr) {
-      cur_y_mean <- array(NA, dim = c(n_s_new, n_y, n_k))
-      for (yi in seq_len(n_y)) cur_y_mean[, yi, ] <- x_regr %*% .regr[, yi, ]
+      for (yi in seq_len(n_y)) {
+        cur_y_mean[, yi, ] <- x_regr %*% .regr[, yi, ]
+      }
       return(cur_y_mean)
     },
     varname = "y_posterior_mean"
