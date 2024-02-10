@@ -5,7 +5,6 @@
 \alias{calculate_component_samples}
 \alias{calculate_posterior_y_mean}
 \alias{calculate_posterior_y_sd}
-\alias{calculate_x_regr}
 \title{Generated Quantities from Model Fit}
 \usage{
 calculate_component_samples(object, new_data)
@@ -13,8 +12,6 @@ calculate_component_samples(object, new_data)
 calculate_posterior_y_mean(object, new_data, z, separate = FALSE)
 
 calculate_posterior_y_sd(object, z, separate = FALSE)
-
-calculate_x_regr(object, new_data)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
@@ -30,6 +27,4 @@ Setting \code{new_data = NULL} signals for the observed data to be used.}
 }
 \description{
 Offline calculations can
-
-Helper to access \code{x_regr} and verify a common RHS to regression formulas.
 }

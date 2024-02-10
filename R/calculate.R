@@ -110,25 +110,6 @@ c_posterior_sds <- function(.z, .prec) {
 }
 
 
-#' Retrieve Regression Design Matrix
-#'
-#' Helper to access `x_regr` and verify a common RHS to regression formulas.
-#'
-#' @rdname bmoe-calculate
-#' @export
-calculate_x_regr <- function(object, new_data) {
-  if (is.null(new_data)) new_data <- object$data
-
-  mfs <- lapply(object$formula$regr, stats::model.frame, data = new_data)
-
-  x_regr_list <- unique(lapply(mfs, stats::model.matrix, data = new_data))
-
-  if (length(x_regr_list) > 1) stop("Regression formulas have different RHS")
-
-  return(x_regr_list[[1]])
-}
-
-
 #' Slice by Component Values
 #'
 #' Delegates 'per component' slicing to get
