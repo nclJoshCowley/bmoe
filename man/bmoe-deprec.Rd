@@ -3,10 +3,28 @@
 \name{bmoe-deprec}
 \alias{bmoe-deprec}
 \alias{calculate_x_regr}
+\alias{calculate_posterior_y_mean}
+\alias{calculate_posterior_y_sd}
 \title{Deprecated Functions}
 \usage{
 calculate_x_regr(object, new_data)
+
+calculate_posterior_y_mean(object, new_data, z, separate = FALSE)
+
+calculate_posterior_y_sd(object, z, separate = FALSE)
+}
+\arguments{
+\item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
+
+\item{new_data}{data frame.
+Similar structure to original \code{data} argument.
+
+Setting \code{new_data = NULL} signals for the observed data to be used.}
+
+\item{z}{\code{\link{bmoe_array}}. Component allocation samples (latent variable).}
+
+\item{separate}{logical. Output is split by response variable when \code{TRUE}.}
 }
 \description{
-These functions should not be used and will be remove in \code{v1.0.0}.
+These functions should not be used and will be removed in \code{v1.0.0}.
 }

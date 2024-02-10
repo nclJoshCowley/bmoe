@@ -3,15 +3,9 @@
 \name{bmoe-calculate}
 \alias{bmoe-calculate}
 \alias{calculate_component_samples}
-\alias{calculate_posterior_y_mean}
-\alias{calculate_posterior_y_sd}
 \title{Generated Quantities from Model Fit}
 \usage{
 calculate_component_samples(object, new_data)
-
-calculate_posterior_y_mean(object, new_data, z, separate = FALSE)
-
-calculate_posterior_y_sd(object, z, separate = FALSE)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
@@ -20,10 +14,6 @@ calculate_posterior_y_sd(object, z, separate = FALSE)
 Similar structure to original \code{data} argument.
 
 Setting \code{new_data = NULL} signals for the observed data to be used.}
-
-\item{z}{\code{\link{bmoe_array}}. Component allocation samples (latent variable).}
-
-\item{separate}{logical. Output is split by response variable when \code{TRUE}.}
 }
 \description{
 Offline calculations can
