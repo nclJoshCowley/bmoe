@@ -11,8 +11,10 @@
 
 \item{...}{Extra arguments ignored.}
 
-\item{new_data}{data frame. Data used to create a design matrices.
-Setting \code{new_data = NULL} utilises the trained model (special case).}
+\item{new_data}{data frame.
+Similar structure to original \code{data} argument.
+
+Setting \code{new_data = NULL} signals for the observed data to be used.}
 
 \item{type}{choice. Determines output type.}
 

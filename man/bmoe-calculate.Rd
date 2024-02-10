@@ -19,8 +19,10 @@ calculate_x_regr(object, new_data)
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
 
-\item{new_data}{data frame. Data used to create a design matrices.
-Setting \code{new_data = NULL} utilises the trained model (special case).}
+\item{new_data}{data frame.
+Similar structure to original \code{data} argument.
+
+Setting \code{new_data = NULL} signals for the observed data to be used.}
 
 \item{z}{\code{\link{bmoe_array}}. Component allocation samples (latent variable).}
 

@@ -5,8 +5,11 @@
 #'   linear regression.
 #'
 #' @param object Object that inherits from [`bmoe_fit`].
-#' @param new_data data frame. Data used to create a design matrices.
-#'   Setting `new_data = NULL` utilises the trained model (special case).
+#'
+#' @param new_data data frame.
+#'   Similar structure to original `data` argument.
+#'
+#'   Setting `new_data = NULL` signals for the observed data to be used.
 #'
 #' @docType package
 #' @name bmoe-package
@@ -15,3 +18,15 @@
 #' TODO
 NULL
 
+
+#' @keywords internal
+#' @noRd
+check_new_data <- function(object, new_data) {
+  if (missing(new_data)) {
+    stop("Argument `new_data` must be provided. See ?`bmoe-package`")
+  }
+
+  if (is.null(new_data)) return(object$data)
+
+  return(new_data)
+}
