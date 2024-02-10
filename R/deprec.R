@@ -12,6 +12,64 @@ NULL
 
 #' @rdname bmoe-deprec
 #' @export
+calculate_pointwise_log_lik <- function(object, new_data) {
+  lifecycle::deprecate_warn(
+    what = "calculate_pointwise_log_lik()",
+    when = "v1.0.0",
+    details = "Please use `extract_pointwise_log_lik()` instead"
+  )
+
+  cur_data <- if (is.null(new_data)) object$data else new_data
+
+  mfs <- lapply(object$formula$regr, stats::model.frame, data = cur_data)
+  y_datalist <- lapply(mfs, stats::model.response)
+
+  z <- calculate_component_samples(object, new_data)
+
+  y_mean <- calculate_posterior_y_mean(object, new_data, z, separate = TRUE)
+  y_sd <- calculate_posterior_y_sd(object, z, separate = TRUE)
+
+
+  Map(
+    function(y, nm, mean, sd) {
+      pmap_bmoe_array(
+        list(mean, sd),
+        function(.mean, .sd) d_lcens_norm(y, .mean, .sd, log = TRUE),
+        varname = nm
+      )
+    },
+    y = y_datalist,
+    nm = lapply(names(y_datalist), function(.nm) sprintf("log_lik_%s", .nm)),
+    mean = y_mean,
+    sd = y_sd
+  )
+}
+
+
+#' @rdname bmoe-deprec
+#' @export
+calculate_log_lik <- function(object, new_data) {
+  lifecycle::deprecate_warn(
+    what = "calculate_log_lik()",
+    when = "v1.0.0",
+    details = "Please use `extract_log_lik()` instead"
+  )
+
+  lapply(
+    calculate_pointwise_log_lik(object, new_data),
+    function(.x) {
+      structure(
+        apply(.x, 1:2, sum),
+        dim = c(dim(.x)[c("iteration", "chain")], 1),
+        class = "bmoe_array"
+      )
+    }
+  )
+}
+
+
+#' @rdname bmoe-deprec
+#' @export
 calculate_component_samples <- function(object, new_data) {
   lifecycle::deprecate_warn(
     what = "calculate_component_samples()",

@@ -2,12 +2,18 @@
 % Please edit documentation in R/deprec.R
 \name{bmoe-deprec}
 \alias{bmoe-deprec}
+\alias{calculate_pointwise_log_lik}
+\alias{calculate_log_lik}
 \alias{calculate_component_samples}
 \alias{calculate_x_regr}
 \alias{calculate_posterior_y_mean}
 \alias{calculate_posterior_y_sd}
 \title{Deprecated Functions}
 \usage{
+calculate_pointwise_log_lik(object, new_data)
+
+calculate_log_lik(object, new_data)
+
 calculate_component_samples(object, new_data)
 
 calculate_x_regr(object, new_data)
