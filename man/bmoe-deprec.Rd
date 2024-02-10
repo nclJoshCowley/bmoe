@@ -2,11 +2,14 @@
 % Please edit documentation in R/deprec.R
 \name{bmoe-deprec}
 \alias{bmoe-deprec}
+\alias{calculate_component_samples}
 \alias{calculate_x_regr}
 \alias{calculate_posterior_y_mean}
 \alias{calculate_posterior_y_sd}
 \title{Deprecated Functions}
 \usage{
+calculate_component_samples(object, new_data)
+
 calculate_x_regr(object, new_data)
 
 calculate_posterior_y_mean(object, new_data, z, separate = FALSE)

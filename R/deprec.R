@@ -12,6 +12,43 @@ NULL
 
 #' @rdname bmoe-deprec
 #' @export
+calculate_component_samples <- function(object, new_data) {
+  lifecycle::deprecate_warn(
+    what = "calculate_component_samples()",
+    when = "v1.0.0",
+    details = "Please use `extract_allocation_samples()` instead"
+  )
+
+  if (is.null(new_data)) return(object$output$z)
+
+  if (object$prior$k == 1) {
+    expected_dims <-
+      c(dim(object$output$z)[c("iteration", "chain")], nrow(new_data))
+
+    return(bmoe::bmoe_array(array(1, dim = expected_dims), varname = "z"))
+  }
+
+  message("Drawing new allocation samples from relevant distribution")
+
+  wt <- object$output$wt
+  x_wt <- stats::model.matrix(object$formula$wt, data = new_data)
+
+  all_labels <- seq_len(dim(wt)[4])
+
+  probs <- pmap_bmoe_array(list(wt), function(.wt) softmax(x_wt %*% .wt))
+
+  pmap_bmoe_array(
+    list(probs = probs),
+    function(probs) {
+      apply(probs, 1, function(.p) sample(all_labels, size = 1, prob = .p))
+    },
+    varname = "z"
+  )
+}
+
+
+#' @rdname bmoe-deprec
+#' @export
 calculate_x_regr <- function(object, new_data) {
   lifecycle::deprecate_warn(
     what = "calculate_x_regr()",
@@ -21,7 +58,6 @@ calculate_x_regr <- function(object, new_data) {
 
   extract_x_regr(object, new_data)
 }
-
 
 
 #' @rdname bmoe-deprec
@@ -54,20 +90,6 @@ calculate_posterior_y_mean <- function(object, new_data, z, separate = FALSE) {
 }
 
 
-#' @keywords internal
-#' @noRd
-c_posterior_means <- function(.z, .regr, x_regr) {
-  n_y <- ncol(.regr)
-
-  out <- matrix(NA, nrow = length(.z), ncol = n_y)
-  for (yi in seq_len(n_y)) {
-    out[, yi] <- slice_by_component_values(x_regr %*% .regr[, yi, ], .z)
-  }
-
-  return(out)
-}
-
-
 #' @rdname bmoe-deprec
 #' @export
 calculate_posterior_y_sd <- function(object, z, separate = FALSE) {
@@ -88,6 +110,20 @@ calculate_posterior_y_sd <- function(object, z, separate = FALSE) {
 
   varnames <- sprintf("y_sd_%s", get_names_from_bmoe_fit(object)$y)
   Map(bmoe_array, asplit(out, 4), varname = varnames)
+}
+
+
+#' @keywords internal
+#' @noRd
+c_posterior_means <- function(.z, .regr, x_regr) {
+  n_y <- ncol(.regr)
+
+  out <- matrix(NA, nrow = length(.z), ncol = n_y)
+  for (yi in seq_len(n_y)) {
+    out[, yi] <- slice_by_component_values(x_regr %*% .regr[, yi, ], .z)
+  }
+
+  return(out)
 }
 
 

@@ -4,11 +4,17 @@
 \alias{bmoe-extract-quantities}
 \alias{extract_y_posterior_mean}
 \alias{extract_y_posterior_sd}
+\alias{extract_allocation_probs}
+\alias{extract_allocation_samples}
 \title{Extract Generated Quantities from Model Fit}
 \usage{
 extract_y_posterior_mean(object, new_data)
 
 extract_y_posterior_sd(object)
+
+extract_allocation_probs(object, new_data)
+
+extract_allocation_samples(object, new_data)
 }
 \arguments{
 \item{object}{Object that inherits from \code{\link{bmoe_fit}}.}
@@ -21,10 +27,13 @@ Setting \code{new_data = NULL} signals for the observed data to be used.}
 \value{
 All quantities returned as \code{\link[=bmoe_array]{bmoe_array()}} of varying dimension.
 
+Note that \code{n_s_new} denotes the number of rows in \code{new_data} or the
+observed data when \code{new_data} is \code{NULL} valued.
+
 \itemize{
 \item \code{extract_y_posterior_mean()}
 \itemize{
-\item \code{dim(.) = c(n_iters, n_chains, n_s, n_y, n_k)}.
+\item \code{dim(.) = c(n_iters, n_chains, n_s_new, n_y, n_k)}.
 }
 }
 
@@ -32,6 +41,20 @@ All quantities returned as \code{\link[=bmoe_array]{bmoe_array()}} of varying di
 \item \code{extract_y_posterior_sd()}
 \itemize{
 \item \code{dim(.) = c(n_iters, n_chains, n_y, n_k)}.
+}
+}
+
+\itemize{
+\item \code{extract_allocation_probs()}
+\itemize{
+\item \code{dim(.) = c(n_iters, n_chains, n_s_new, n_k)}.
+}
+}
+
+\itemize{
+\item \code{extract_allocation_samples()}
+\itemize{
+\item \code{dim(.) = c(n_iters, n_chains, n_s_new)}.
 }
 }
 }
