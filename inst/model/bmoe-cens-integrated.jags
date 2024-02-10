@@ -1,0 +1,59 @@
+var regr[p_regr, n_y, k], prec[n_y, k], exp_lp_wt[n_s, k], probs[n_s, k];
+data {
+  # Ones trick
+  for (i in 1:n_s) { ones[i] =  1 }
+  C = 10000000
+}
+model {
+  # Transformed parameters
+  for (i in 1:n_s) {
+    for (ki in 1:k) {
+      exp_lp_wt[i, ki] = exp(x_wt[i, 1:p_wt] %*% wt[1:p_wt, ki])
+      probs[i, ki] = exp_lp_wt[i, ki] / sum(exp_lp_wt[i, ])
+    }
+  }
+
+  for (i in 1:n_s) {
+    for (ki in 1:k) {
+      joint_dens[i, ki] = prod(univ_dens[i, 1:n_y, ki])
+
+      for (yi in 1:n_y) {
+        mean[i, yi, ki] = x_regr[i, 1:p_regr] %*% regr[1:p_regr, yi, ki]
+
+        univ_dens[i, yi, ki] =
+          ifelse(
+            is_nd[i, yi],
+            pnorm(y[i, yi], mean[i, yi, ki], prec[yi, ki]),
+            dnorm(y[i, yi], mean[i, yi, ki], prec[yi, ki])
+          )
+      }
+    }
+  }
+
+  # Likelihood
+  for (i in 1:n_s) {
+    ones[i] ~ dbern(L[i] / C)
+    # Can I vector mult here?
+    L[i] = sum(probs[i, 1:k] * joint_dens[i, 1:k])
+  }
+
+  # Generated Quantities
+  for (i in 1:n_s) {
+    z[i] ~ dcat(probs[i, 1:k])
+  }
+
+
+  # Prior
+  for (ki in 1:k) { for (yi in 1:n_y) {
+    prec[yi, ki] ~ dgamma(prec_shape, prec_rate)
+  }}
+
+  for (j in 1:p_regr) { for (yi in 1:n_y) { for (ki in 1:k) {
+    regr[j, yi, ki] ~ dnorm(0, regr_prec)
+  }}}
+
+  for (j in 1:p_wt) {
+    for (ki in 2:k) { wt[j, ki] ~ dnorm(0, wt_prec) }
+    wt[j, 1] = 0
+  }
+}
