@@ -14,6 +14,8 @@
 #'
 #' @export
 predict.bmoe_fit <- function(object, ..., new_data, type, summarise = TRUE) {
+  new_data <- check_new_data(object, new_data)
+
   if (length(type) > 1) {
     return(dplyr::bind_cols(
       lapply(type, function(.type) {
@@ -27,7 +29,7 @@ predict.bmoe_fit <- function(object, ..., new_data, type, summarise = TRUE) {
   type <- match.arg(type, c("response", "raw", "class"))
   y_keys <- sprintf(".pred_%s", get_names_from_bmoe_fit(object)$y)
 
-  z <- calculate_component_samples(object, new_data)
+  z <- extract_allocation_samples(object, new_data)
 
   if (type == "class") {
     if (summarise) {
@@ -37,15 +39,25 @@ predict.bmoe_fit <- function(object, ..., new_data, type, summarise = TRUE) {
     }
   }
 
-  y_mean <- calculate_posterior_y_mean(object, new_data, z, separate = FALSE)
-  y_sd <- calculate_posterior_y_sd(object, z, separate = FALSE)
+  y_mean <- extract_allocated_y_posterior_mean(object, new_data, z)
+  y_sd <- extract_allocated_y_posterior_sd(object, new_data, z)
+
+  if (any(dim(y_mean) != dim(y_sd))) {
+    rlang::abort(
+      "Predictive distribution parameters must have identical dimension.",
+      body = sprintf("dim(y_mean) = c(%s)", toString(dim(y_mean))),
+      footer = sprintf("dim(y_sd) = c(%s)", toString(dim(y_sd)))
+    )
+  }
 
   y_pred <-
-    array(
-      stats::rnorm(n = length(y_mean), mean = y_mean, sd = y_sd),
-      dim = dim(y_mean)
-    ) |>
-    bmoe_array(varname = "y_pred")
+    bmoe_array(
+      array(
+        stats::rnorm(n = length(y_mean), mean = y_mean, sd = y_sd),
+        dim = dim(y_mean)
+      ),
+      varname = "y_pred"
+    )
 
   if (type == "response") {
     if (summarise) {
