@@ -23,7 +23,7 @@ Alternatively one can pass a \strong{list} of custom layers to be added.
 
 \item{...}{Extra arguments silently ignored.}
 
-\item{new_data}{Passed to \link{calculate_log_lik}; ignored otherwise.}
+\item{new_data}{Passed to \code{\link[=extract_log_lik]{extract_log_lik()}}; ignored otherwise.}
 }
 \description{
 Creates a nested list of \code{ggplot2} objects with partitioned data, requires

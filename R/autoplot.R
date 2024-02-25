@@ -5,7 +5,7 @@
 #'
 #' @inheritParams extract_draws
 #' @inheritParams mcmc_layer
-#' @param new_data Passed to [calculate_log_lik]; ignored otherwise.
+#' @param new_data Passed to [`extract_log_lik()`]; ignored otherwise.
 #' @param ... Extra arguments silently ignored.
 #'
 #' @name bmoe-plot
@@ -45,8 +45,7 @@ autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
     prec = make_empty_plotlist_prec(object) |>
       purrr::modify_depth(1, `&`, cur_layer),
 
-    log_lik = make_empty_plotlist_log_lik(object, new_data) |>
-      purrr::modify_depth(1, `&`, cur_layer),
+    log_lik = make_empty_plot_log_lik(object, new_data) + cur_layer,
   )
 }
 
@@ -98,13 +97,11 @@ make_empty_plotlist_prec <- function(object) {
 
 #' @inheritParams bmoe-plot
 #' @keywords internal
-make_empty_plotlist_log_lik <- function(object, new_data) {
-  log_liks <- calculate_log_lik(object, new_data)
+make_empty_plot_log_lik <- function(object, new_data) {
+  log_liks <- extract_log_lik(object, new_data)
 
-  purrr::imap(log_liks, function(.x, .nm) {
-    ggplot2::ggplot(tidy(.x)) +
-      ggplot2::labs(subtitle = sprintf("Log likelihood, %s", .nm))
-  })
+  ggplot2::ggplot(tidy(log_liks)) +
+    ggplot2::labs(subtitle = "Log likelihood")
 }
 
 
