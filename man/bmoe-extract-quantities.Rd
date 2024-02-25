@@ -61,3 +61,6 @@ observed data when \code{new_data} is \code{NULL} valued.
 \description{
 Offline calculations for model artefacts from a \code{bmoe} model fit.
 }
+\seealso{
+\link[=bmoe-extract-allocated]{Allocated versions} of these functions.
+}

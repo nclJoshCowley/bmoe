@@ -6,6 +6,8 @@
 #'
 #' @name bmoe-extract-quantities
 #'
+#' @seealso [Allocated versions][bmoe-extract-allocated] of these functions.
+#'
 #' @returns All quantities returned as [`bmoe_array()`] of varying dimension.
 #'
 #' Note that `n_s_new` denotes the number of rows in `new_data` or the
