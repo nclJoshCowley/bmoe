@@ -89,45 +89,6 @@ extract_pointwise_log_lik <- function(object, new_data) {
 }
 
 
-#' Alternate approach to [`extract_pointwise_log_lik()`]
-#'
-#' Retained as this may be more stable, yet slower, than the exported version.
-#'
-#' @inheritParams bmoe-log-lik
-#' @keywords internal
-.extract_pointwise_log_lik <- function(object, new_data) {
-  cw_pw_lik <- exp(extract_componentwise_pointwise_log_lik(object, new_data))
-  probs <- extract_allocation_probs(object, new_data)
-
-  pw_lik <-
-    pmap_bmoe_array(
-      .l = list(.cw_pw_lik = cw_pw_lik, .probs = probs),
-      .f = function(.cw_pw_lik, .probs) {
-        # Create n_s_new by n_k matrix equal to
-        # product of .cw_pw_lik[, yi, ] for all yi.
-        joint_y_likelihood <- Reduce(`*`, asplit(.cw_pw_lik, 2))
-
-        rowSums(.probs * joint_y_likelihood)
-      },
-      varname = "pointwise_likelihood"
-    )
-
-  if (min(pw_lik) <= 0) {
-    stop("Pointwise likelihood evaluated to 0, unable to 'log'")
-  }
-
-  if (anyNA(pw_lik)) {
-    stop("Pointwise likelihood contains NA values")
-  }
-
-  if (any(is.infinite(pw_lik))) {
-    stop("Pointwise likelihood contains non-finite values")
-  }
-
-  return(structure(log(pw_lik), varname = "pointwise_log_lik"))
-}
-
-
 #' @rdname bmoe-log-lik
 #'
 #' @returns * `extract_componentwise_pointwise_log_lik()`
