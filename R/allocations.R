@@ -129,7 +129,7 @@ visualise_response_data <- function(object, .plot_by, .rank_by) {
     ) +
     ggplot2::scale_shape_manual(
       name = NULL,
-      values = c(`TRUE` = 1, `FALSE` = 16),
+      values = c(`TRUE` = 6, `FALSE` = 16),
       labels = c(`TRUE` = "Censored", `FALSE` = "Observed")
     )
 
