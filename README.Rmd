@@ -14,29 +14,58 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Purpose
-
 <!-- badges: start -->
 <!-- badges: end -->
 
+## Purpose
+
 This repository contains an R package with a focus on Mixture of Experts (MoE)
     applied to Bayesian linear and censored regression.
+    
+Originally used in a yet to be published thesis, **work is ongoing** to make
+    this publicly accessible package easier to use.
+    
+Tasks remaining include
+
+* Adding `pkgdown` then improving documentation (`README`, vignettes, etc.),
+
+* Possibly migrating to Stan to avoid the JAGS 'ones trick',
+
+* Removing unnecessary code and dependencies,
+
+* Submitting to CRAN for wider use.
 
 
 
 ## Installation
 
-You can install the development version of `bmoe` from [GitHub](https://github.com/) with:
+You can install the development version of `bmoe` from
+  [GitHub](https://github.com/nclJoshCowley/bmoe) with:
 
 ```{.r}
-devtools::install_github("nclJoshCowley/bmoe", auth_token = ...)
+remotes::install_github("nclJoshCowley/bmoe")
 ```
 
 
 
 ## Model Description
 
-TODO: Include model description here.
+We present the Mixture of Experts model as a finite mixture model of $K$
+    parametric linear regressions, where the concomitant weighting parameters
+    also depend on some predictors.
+
+$$
+    f(\boldsymbol{y_i} | \boldsymbol{x}_i, \boldsymbol{\omega}, \boldsymbol{\theta})
+        = \sum_{k=1}^K
+            \eta_k(\boldsymbol{x}_i | \boldsymbol{\omega}_k)
+            f_k(\boldsymbol{y_i} | \boldsymbol{x}_i, \boldsymbol{\theta}_k)
+$$
+
+Each components' distribution is currently limited to
+    (conditionally independent) multiple linear regressions where each
+    response variable can potentially be left-censored.
+
+<!-- TODO: Article to explain what this model is in semi-technical detail -->
 
 
 
@@ -98,15 +127,8 @@ For example, `y01 + y02 ~ x01 + x02 + x03 | x03` implies two response
 
 ### Reporting
 
-Analysis reports can be generated from any fitted object and desired filename.
+Analysis reports can be generated from any fitted object and desired file name.
 
 ```{.r}
 bmoe::render_bmoe_fit(example_fit, "report-name")
 ```
-
-
-
-## Future Work
-
-Extend this `README` with more functionality including relabelling, prediction
-and log likelihood.

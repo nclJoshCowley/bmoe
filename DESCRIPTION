@@ -11,6 +11,7 @@ Maintainer: Josh Cowley <j.cowley1@ncl.ac.uk>
 Description:
   Bayesian Mixture of Experts (MoE) applied to possibly left-censored
   linear regression.
+URL: https://ncljoshcowley.github.io/bmoe/
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -37,3 +38,4 @@ Suggests:
     testthat (>= 3.0.0),
     tidyr,
     quarto
+
