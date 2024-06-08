@@ -1,0 +1,10 @@
+pandoc: 3.1.11
+pkgdown: 2.0.9
+pkgdown_sha: ~
+articles:
+  component-memoisation: component-memoisation.html
+last_built: 2024-06-08T14:07Z
+urls:
+  reference: https://ncljoshcowley.github.io/bmoe/reference
+  article: https://ncljoshcowley.github.io/bmoe/articles
+
