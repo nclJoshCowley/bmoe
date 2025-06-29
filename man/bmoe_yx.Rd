@@ -4,7 +4,7 @@
 \alias{bmoe_yx}
 \title{Mixture of Experts Implementation}
 \usage{
-bmoe_yx(y_list, x_regr, x_wt, prior, jags_n, inits)
+bmoe_yx(y_list, x_regr, x_wt, prior, jags_n, inits = NULL)
 }
 \arguments{
 \item{y_list}{list. Response data per element; length is 1 when univariate.}
