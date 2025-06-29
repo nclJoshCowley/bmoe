@@ -7,6 +7,9 @@ inst/reports/*html
 inst/reports/*_files
 inst/reports/*cache
 
+# Development ideas
+scripts/
+
 # https://github.com/github/gitignore/blob/master/R.gitignore
 # -----------------------------------------------------------
 
