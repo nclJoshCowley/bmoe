@@ -1,5 +1,4 @@
 utils::globalVariables(".")
-utils::globalVariables("!<-")
 
 
 #' @importFrom ggplot2 autoplot
@@ -16,7 +15,7 @@ generics::tidy
 #'
 #' Imports from other packages used within this package
 #'
-#' @name utils-imports
+#' @name bmoe-imports
 #'
 #' @importFrom rlang .data .env
 #' @importFrom rlang %||%
