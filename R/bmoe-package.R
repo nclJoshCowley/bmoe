@@ -11,12 +11,11 @@
 #'
 #'   Setting `new_data = NULL` signals for the observed data to be used.
 #'
-#' @docType package
 #' @name bmoe-package
 #'
 #' @section Model Specification:
 #' TODO
-NULL
+"_PACKAGE"
 
 
 #' @keywords internal

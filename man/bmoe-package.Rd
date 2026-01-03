@@ -21,3 +21,14 @@ linear regression.
 TODO
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://ncljoshcowley.github.io/bmoe/}
+}
+
+}
+\author{
+\strong{Maintainer}: Josh Cowley \email{j.cowley1@ncl.ac.uk}
+
+}
