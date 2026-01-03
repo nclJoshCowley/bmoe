@@ -13,6 +13,8 @@
 #'
 #' @export
 autoplot.bmoe_fit <- function(object, varname, type = "none", ..., new_data) {
+  requireNamespace("patchwork")
+
   if (is.character(type) && length(type) > 1) {
     new_data <- rlang::maybe_missing(new_data)
 
