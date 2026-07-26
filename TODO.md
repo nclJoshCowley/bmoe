@@ -1,4 +1,4 @@
-# Development Notes (`bmoe`)
+# Development Actions (`bmoe`)
 
 ## Task View (Vignettes)
 
@@ -30,7 +30,9 @@
 
   * Solution (via `boys_henderson_2002`)
 
-## Function List
+## Function View
+
+For CRAN submission, audit each function and determine if it is beyond scope.
 
 ### Allocation Visualisations
 
