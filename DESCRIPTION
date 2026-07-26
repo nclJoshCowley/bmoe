@@ -6,8 +6,8 @@ Authors@R:
     person(given = "Josh",
            family = "Cowley",
            role = c("aut", "cre"),
-           email = "j.cowley1@ncl.ac.uk")
-Maintainer: Josh Cowley <j.cowley1@ncl.ac.uk>
+           email = "josh.cowley@hotmail.com")
+Maintainer: Josh Cowley <josh.cowley@hotmail.com>
 Description:
   Bayesian Mixture of Experts (MoE) applied to possibly left-censored
   linear regression.
