@@ -124,7 +124,6 @@ boys_henderson_2002 <- function(z, start = 2, z_max = max(z)) {
 
   for (ic in seq_len(n_chains)) {
     message("\n", sprintf("Chain %i/%i", ic, n_chains))
-    # pb <- knitrProgressBar::progress_estimated(n_iters - start + 1)
 
     z_cur_chain <- z[, ic, , drop = TRUE]
 
@@ -132,8 +131,6 @@ boys_henderson_2002 <- function(z, start = 2, z_max = max(z)) {
     for (ii in seq_len(start - 1)) out[[ic]][ii, ] <- seq_len(z_max)
 
     for (ii in seq(start, n_iters)) {
-      # knitrProgressBar::update_progress(pb)
-
       # Create / update estimate (using Marginal Posterior Mode)
       z_est <-
         apply(z_cur_chain[seq_len(ii - 1), , drop = FALSE], 2, arith_mode)
