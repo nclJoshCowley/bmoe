@@ -54,14 +54,7 @@
 <h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
 <p>This repository contains an R package with a focus on Mixture of Experts (MoE) applied to Bayesian linear and censored regression.</p>
-<p>Originally used in a yet to be published thesis, <strong>work is ongoing</strong> to make this publicly accessible package easier to use.</p>
-<p>Tasks remaining include</p>
-<ul>
-<li><p>Adding <code>pkgdown</code> then improving documentation (<code>README</code>, vignettes, etc.),</p></li>
-<li><p>Possibly migrating to Stan to avoid the JAGS ‘ones trick’,</p></li>
-<li><p>Removing unnecessary code and dependencies,</p></li>
-<li><p>Submitting to CRAN for wider use.</p></li>
-</ul>
+<p>Details on the methodology can be found in <a href="http://theses.ncl.ac.uk/jspui/handle/10443/6566" class="external-link">Cowley (2024)</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -96,18 +89,18 @@
 <span></span>
 <span><span class="va">example_sim</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt; # A tibble: 180 × 4</span></span>
-<span><span class="co">#&gt;       y01     x01     x02     x03</span></span>
-<span><span class="co">#&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 -4.03  -1.07   -0.0269 -1.03  </span></span>
-<span><span class="co">#&gt;  2  1.26  -1.36   -1.34    0.901 </span></span>
-<span><span class="co">#&gt;  3 -4.38   1.37   -2.21   -0.277 </span></span>
-<span><span class="co">#&gt;  4 -0.490 -0.463   0.0581  0.0647</span></span>
-<span><span class="co">#&gt;  5 -0.211  0.0454 -0.446  -0.406 </span></span>
-<span><span class="co">#&gt;  6  7.45   0.456   0.956   0.927 </span></span>
-<span><span class="co">#&gt;  7  4.92   1.03    1.78    2.56  </span></span>
-<span><span class="co">#&gt;  8 -0.140 -0.312  -0.428   0.222 </span></span>
-<span><span class="co">#&gt;  9 -0.162  0.195   0.0182 -0.836 </span></span>
-<span><span class="co">#&gt; 10  2.69   2.47   -1.46   -0.473 </span></span>
+<span><span class="co">#&gt;      y01    x01     x02    x03</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 -1.08  0.695 -1.82    0.857</span></span>
+<span><span class="co">#&gt;  2 -6.67  1.17  -1.20    0.882</span></span>
+<span><span class="co">#&gt;  3  1.25  1.24  -0.0290 -0.211</span></span>
+<span><span class="co">#&gt;  4  4.75 -0.358  0.243   2.03 </span></span>
+<span><span class="co">#&gt;  5  6.86  0.128  2.24    0.116</span></span>
+<span><span class="co">#&gt;  6 -5.21 -1.63  -0.372  -0.534</span></span>
+<span><span class="co">#&gt;  7  5.26  1.93   0.768   0.363</span></span>
+<span><span class="co">#&gt;  8 -4.20 -0.947 -0.746  -1.04 </span></span>
+<span><span class="co">#&gt;  9  1.80  0.861 -0.314  -0.169</span></span>
+<span><span class="co">#&gt; 10  7.50  0.835  1.01    1.01 </span></span>
 <span><span class="co">#&gt; # ℹ 170 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
