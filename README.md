@@ -4,6 +4,7 @@
 
 <!-- badges: start -->
 
+[![DOI](https://zenodo.org/badge/711197444.svg)](https://doi.org/10.5281/zenodo.21625566)
 <!-- badges: end -->
 
 ## Purpose
