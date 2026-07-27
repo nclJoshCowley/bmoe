@@ -56,7 +56,7 @@ model_fit <-
     Graph information:
        Observed stochastic nodes: 306
        Unobserved stochastic nodes: 319
-       Total graph size: 3967
+       Total graph size: 3972
 
     Initializing model
 
