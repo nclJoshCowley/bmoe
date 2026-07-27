@@ -1,10 +1,11 @@
 ---
-output: github_document
+format: gfm
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.qmd. Please edit that file -->
 
-```{r setup}
+```{r}
+#| label: setup
 #| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -12,6 +13,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+set.seed(seed = 1)
 ```
 
 <!-- badges: start -->
@@ -68,6 +71,7 @@ We can simulate data from these models using `bmoe::simulate_bmoe()`.
 Alternatively, one can use the example wrapper to utilise default arguments.
 
 ```{r}
+#| label: example_simulate_bmoe
 example_sim <- bmoe::example_simulate_bmoe()
 
 example_sim$data
@@ -80,6 +84,7 @@ for each parameter but the number of components ($K$) is assumed known and must
 be set by the user.
 
 ```{r}
+#| label: example_bmoe_prior
 example_prior <- bmoe::bmoe_prior(k = 3)
 
 example_prior

@@ -60,3 +60,6 @@ docs/
 po/*~
 inst/doc
 docs
+
+/.quarto/
+**/*.quarto_ipynb
